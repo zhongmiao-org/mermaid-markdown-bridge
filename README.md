@@ -1,51 +1,91 @@
-# mermaid-markdown-bridge
+# Mermaid Markdown Bridge
 
-![Build](https://github.com/zhongmiao-org/mermaid-markdown-bridge/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
+[![Build](https://github.com/zhongmiao-org/mermaid-markdown-bridge/actions/workflows/build.yml/badge.svg)](https://github.com/zhongmiao-org/mermaid-markdown-bridge/actions/workflows/build.yml)
+[![Changelog](https://github.com/zhongmiao-org/mermaid-markdown-bridge/actions/workflows/changelog.yml/badge.svg)](https://github.com/zhongmiao-org/mermaid-markdown-bridge/actions/workflows/changelog.yml)
+[![GitHub release](https://img.shields.io/github/v/release/zhongmiao-org/mermaid-markdown-bridge?include_prereleases&sort=semver)](https://github.com/zhongmiao-org/mermaid-markdown-bridge/releases)
+[![License](https://img.shields.io/github/license/zhongmiao-org/mermaid-markdown-bridge)](./LICENSE)
+![Kotlin](https://img.shields.io/badge/Kotlin-2.3.21-7F52FF?logo=kotlin&logoColor=white)
+![JetBrains Platform](https://img.shields.io/badge/JetBrains%20Platform-2025.2-000000?logo=jetbrains&logoColor=white)
 
-## Template ToDo list
-- [x] Create a new [IntelliJ Platform Plugin Template][template] project.
-- [ ] Get familiar with the [template documentation][template].
-- [ ] Adjust the [group](./gradle.properties), as well as the [id](./src/main/resources/META-INF/plugin.xml), [name](./src/main/resources/META-INF/plugin.xml), and [sources package](./src/main/kotlin).
-- [ ] Adjust the plugin description in `README` (see [Tips][docs:plugin-description])
-- [ ] Review the [Legal Agreements](https://plugins.jetbrains.com/docs/marketplace/legal-agreements.html?from=IJPluginTemplate).
-- [ ] [Publish a plugin manually](https://plugins.jetbrains.com/docs/intellij/publishing-plugin.html?from=IJPluginTemplate) for the first time.
-- [ ] Set the `MARKETPLACE_ID` in the above README badges. You can obtain it once the plugin is published to JetBrains Marketplace.
-- [ ] Set the [Plugin Signing](https://plugins.jetbrains.com/docs/intellij/plugin-signing.html?from=IJPluginTemplate) related [secrets](https://github.com/JetBrains/intellij-platform-plugin-template#environment-variables).
-- [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html?from=IJPluginTemplate).
-- [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
+[中文文档](./README_zh.md)
 
-<!-- Plugin description -->
-This Fancy IntelliJ Platform Plugin is going to be your implementation of the brilliant ideas that you have.
+Render Mermaid code blocks directly inside the built-in JetBrains Markdown Preview.
 
-This specific section is a source for the [plugin.xml](/src/main/resources/META-INF/plugin.xml) file which will be extracted by the [Gradle](/build.gradle.kts) during the build process.
+Mermaid Markdown Bridge is a small JetBrains IDE plugin for Markdown authors who want diagrams to appear in preview without switching editors or installing a separate Mermaid language plugin. The MVP focuses only on preview rendering: it does not add Mermaid PSI, inspections, completion, intentions, or custom editors.
 
-To keep everything working, do not remove `<!-- ... -->` sections. 
-<!-- Plugin description end -->
+## Features
+
+- Renders fenced Mermaid code blocks in JetBrains Markdown Preview.
+- Supports common Mermaid diagrams such as `flowchart TD` and `sequenceDiagram`.
+- Works by extending the JetBrains Markdown preview browser layer, keeping the regular Markdown editor and preview panel intact.
+- Bundles Mermaid runtime resources with the plugin, so no extra Mermaid plugin is required.
+- Adapts the Mermaid theme to the IDE light or dark theme.
+- Leaves normal Markdown code blocks untouched.
+
+## Usage
+
+Write a regular Mermaid fenced code block in a Markdown file:
+
+````markdown
+```mermaid
+flowchart TD
+  A[Start] --> B{Is it working?}
+  B -->|Yes| C[Done]
+  B -->|No| D[Fix it]
+  D --> B
+```
+````
+
+Open the file in a supported JetBrains IDE and switch to Markdown Preview. The Mermaid block is converted into a diagram in the preview pane.
+
+See [examples/demo.md](./examples/demo.md) for flowchart and sequence diagram examples.
 
 ## Installation
 
-- Using the IDE built-in plugin system:
+The plugin is not yet listed on JetBrains Marketplace.
 
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "mermaid-markdown-bridge"</kbd> >
-  <kbd>Install</kbd>
+For now, install a ZIP from GitHub Releases:
 
-- Using JetBrains Marketplace:
+1. Download the latest plugin ZIP from [GitHub Releases](https://github.com/zhongmiao-org/mermaid-markdown-bridge/releases).
+2. In the IDE, open `Settings/Preferences` > `Plugins`.
+3. Open the gear menu and choose `Install Plugin from Disk...`.
+4. Select the downloaded ZIP and restart the IDE when prompted.
 
-  Go to [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID) and install it by clicking the <kbd>Install to ...</kbd> button in case your IDE is running.
+## Compatibility
 
-  You can also download the [latest release](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID/versions) from JetBrains Marketplace and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+- Target platform: IntelliJ Platform `2025.2`.
+- Primary IDE targets: IntelliJ IDEA Community and WebStorm.
+- Required bundled plugin: JetBrains Markdown plugin (`org.intellij.plugins.markdown`).
+- Preview engine: JCEF-based Markdown Preview.
 
-- Manually:
+## Known Limitations
 
-  Download the [latest release](https://github.com/zhongmiao-org/mermaid-markdown-bridge/releases/latest) and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+- Compose Markdown Preview may not load the browser extension script.
+- Mermaid language services are out of scope for the MVP.
+- `.mmd` and `.mermaid` file types are not registered.
+- Syntax highlighting, completion, inspections, intentions, and settings UI are not included.
+- Marketplace badges will be added after the plugin receives a JetBrains Marketplace plugin ID.
 
+## Development
 
----
-Plugin based on the [IntelliJ Platform Plugin Template][template].
+Run tests:
 
-[template]: https://github.com/JetBrains/intellij-platform-plugin-template
-[docs:plugin-description]: https://plugins.jetbrains.com/docs/intellij/plugin-user-experience.html#plugin-description-and-presentation
+```shell
+./gradlew test
+```
+
+Build the plugin:
+
+```shell
+./gradlew build
+```
+
+Start a sandbox IDE:
+
+```shell
+./gradlew runIde
+```
+
+## License
+
+This project is licensed under the [MIT License](./LICENSE).
