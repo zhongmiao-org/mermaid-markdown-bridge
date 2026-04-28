@@ -1,15 +1,14 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.ark65.mermaidmarkdownbridge</id>
-    <name>mermaid-markdown-bridge</name>
-    <vendor>ark-65</vendor>
+    <id>com.zhongmiao.mermaid.markdown.bridge</id>
+    <name>Mermaid Markdown Bridge</name>
+    <vendor>zhongmiao</vendor>
+    <description>Render Mermaid code blocks in JetBrains Markdown Preview.</description>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>org.intellij.plugins.markdown</depends>
 
-    <resource-bundle>messages.MyBundle</resource-bundle>
-
-    <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.ark65.mermaidmarkdownbridge.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.ark65.mermaidmarkdownbridge.startup.MyProjectActivity" />
+    <extensions defaultExtensionNs="org.intellij.markdown">
+        <browserPreviewExtensionProvider implementation="com.zhongmiao.mermaid.markdown.bridge.preview.MermaidBrowserPreviewExtension$Provider"/>
     </extensions>
 </idea-plugin>
