@@ -8,6 +8,7 @@ import org.intellij.plugins.markdown.ui.preview.ResourceProvider
 
 class MermaidBrowserPreviewExtension internal constructor(
     private val theme: String,
+    private val bridgeTheme: String,
 ) : MarkdownBrowserPreviewExtension, ResourceProvider {
 
     override val scripts: List<String>
@@ -32,6 +33,7 @@ class MermaidBrowserPreviewExtension internal constructor(
         val content = resource.content
             .toString(Charsets.UTF_8)
             .replace(THEME_PLACEHOLDER, theme)
+            .replace(BRIDGE_THEME_PLACEHOLDER, bridgeTheme)
             .toByteArray(Charsets.UTF_8)
 
         return ResourceProvider.Resource(content, JAVASCRIPT_MIME_TYPE)
@@ -41,8 +43,10 @@ class MermaidBrowserPreviewExtension internal constructor(
 
     class Provider : MarkdownBrowserPreviewExtension.Provider {
         override fun createBrowserExtension(panel: MarkdownHtmlPanel): MarkdownBrowserPreviewExtension {
-            val theme = if (JBColor.isBright()) "default" else "dark"
-            return MermaidBrowserPreviewExtension(theme).also {
+            val isBright = JBColor.isBright()
+            val mermaidTheme = if (isBright) "default" else "dark"
+            val bridgeTheme = if (isBright) "light" else "dark"
+            return MermaidBrowserPreviewExtension(mermaidTheme, bridgeTheme).also {
                 Disposer.register(panel, it)
             }
         }
@@ -52,6 +56,7 @@ class MermaidBrowserPreviewExtension internal constructor(
         private const val JAVASCRIPT_MIME_TYPE = "text/javascript"
         private const val BRIDGE_SCRIPT = "mermaid-bridge.js"
         private const val THEME_PLACEHOLDER = "__MERMAID_MARKDOWN_BRIDGE_THEME__"
+        private const val BRIDGE_THEME_PLACEHOLDER = "__MERMAID_MARKDOWN_BRIDGE_VIEWER_THEME__"
 
         private val SCRIPTS = listOf(
             "mermaid.min.js",

@@ -2,6 +2,7 @@
   "use strict";
 
   const MERMAID_THEME = "__MERMAID_MARKDOWN_BRIDGE_THEME__";
+  const VIEWER_THEME = "__MERMAID_MARKDOWN_BRIDGE_VIEWER_THEME__";
   const PENDING_ATTR = "data-mermaid-bridge-pending";
   const RENDERED_ATTR = "data-mermaid-bridge-rendered";
   const ERROR_ATTR = "data-mermaid-bridge-error";
@@ -14,6 +15,33 @@
 
   let initialized = false;
   let scheduled = false;
+
+  const BRIDGE_THEMES = {
+    light: {
+      viewerBackground: "#ffffff",
+      viewerBorder: "#d0d7de",
+      canvasBackground: "#ffffff",
+      buttonBackground: "#f6f8fa",
+      buttonBackgroundHover: "#ebf0f4",
+      buttonBorder: "#d0d7de",
+      buttonColor: "#24292f",
+      buttonShadow: "rgba(27, 31, 36, 0.12)",
+      focusOutline: "#0969da"
+    },
+    dark: {
+      viewerBackground: "#0d1117",
+      viewerBorder: "#30363d",
+      canvasBackground: "#0d1117",
+      buttonBackground: "#21262d",
+      buttonBackgroundHover: "#30363d",
+      buttonBorder: "#3d444d",
+      buttonColor: "#c9d1d9",
+      buttonShadow: "rgba(1, 4, 9, 0.45)",
+      focusOutline: "#58a6ff"
+    }
+  };
+
+  const BRIDGE_THEME = BRIDGE_THEMES[VIEWER_THEME] || BRIDGE_THEMES.light;
 
   function isMermaidCodeBlock(code) {
     if (!code || !code.classList) {
@@ -93,9 +121,9 @@
       "  position: relative;",
       "  overflow: hidden;",
       "  min-height: 180px;",
-      "  border: 1px solid rgba(127, 127, 127, 0.28);",
+      "  border: 1px solid " + BRIDGE_THEME.viewerBorder + ";",
       "  border-radius: 6px;",
-      "  background: rgba(127, 127, 127, 0.04);",
+      "  background: " + BRIDGE_THEME.viewerBackground + ";",
       "}",
       ".mermaid-bridge-canvas {",
       "  display: inline-block;",
@@ -108,6 +136,7 @@
       "  cursor: grab;",
       "  user-select: none;",
       "  touch-action: none;",
+      "  background: " + BRIDGE_THEME.canvasBackground + ";",
       "}",
       ".mermaid-bridge-canvas:active {",
       "  cursor: grabbing;",
@@ -141,22 +170,30 @@
       "  width: 44px;",
       "  height: 44px;",
       "  padding: 0;",
-      "  border: 1px solid rgba(127, 127, 127, 0.34);",
+      "  border: 1px solid " + BRIDGE_THEME.buttonBorder + ";",
       "  border-radius: 8px;",
-      "  background: color-mix(in srgb, Canvas 82%, transparent);",
-      "  color: CanvasText;",
-      "  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);",
+      "  background: " + BRIDGE_THEME.buttonBackground + ";",
+      "  color: " + BRIDGE_THEME.buttonColor + ";",
+      "  box-shadow: 0 2px 8px " + BRIDGE_THEME.buttonShadow + ";",
       "  cursor: pointer;",
-      "  font: 700 20px/1 system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;",
+      "  display: inline-flex;",
+      "  align-items: center;",
+      "  justify-content: center;",
       "  pointer-events: auto;",
+      "}",
+      ".mermaid-bridge-controls button svg,",
+      ".mermaid-bridge-zoom-controls button svg {",
+      "  width: 22px;",
+      "  height: 22px;",
+      "  display: block;",
       "}",
       ".mermaid-bridge-controls button:hover,",
       ".mermaid-bridge-zoom-controls button:hover {",
-      "  background: rgba(127, 127, 127, 0.18);",
+      "  background: " + BRIDGE_THEME.buttonBackgroundHover + ";",
       "}",
       ".mermaid-bridge-controls button:focus-visible,",
       ".mermaid-bridge-zoom-controls button:focus-visible {",
-      "  outline: 2px solid Highlight;",
+      "  outline: 2px solid " + BRIDGE_THEME.focusOutline + ";",
       "  outline-offset: 1px;",
       "}",
       ".mermaid-bridge-pan-up {",
@@ -187,11 +224,24 @@
     return Math.min(Math.max(value, min), max);
   }
 
-  function createControlButton(className, label, text, onClick) {
+  function iconSvg(name) {
+    const icons = {
+      panUp: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>',
+      panDown: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M19 12l-7 7-7-7"/></svg>',
+      panLeft: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg>',
+      panRight: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>',
+      reset: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.5-6.2"/><path d="M18.5 2.8v5.5H13"/><path d="M21 12a9 9 0 0 1-15.5 6.2"/><path d="M5.5 21.2v-5.5H11"/></svg>',
+      zoomIn: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M16 16l5 5"/><path d="M10.5 7.5v6"/><path d="M7.5 10.5h6"/></svg>',
+      zoomOut: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M16 16l5 5"/><path d="M7.5 10.5h6"/></svg>'
+    };
+    return icons[name] || "";
+  }
+
+  function createControlButton(className, label, iconName, onClick) {
     const button = document.createElement("button");
     button.type = "button";
     button.className = className;
-    button.textContent = text;
+    button.innerHTML = iconSvg(iconName);
     button.title = label;
     button.setAttribute("aria-label", label);
     button.addEventListener("click", function (event) {
@@ -267,27 +317,27 @@
     const zoomControls = document.createElement("div");
     zoomControls.className = "mermaid-bridge-zoom-controls";
     zoomControls.setAttribute("aria-label", "Mermaid diagram zoom controls");
-    zoomControls.appendChild(createControlButton("mermaid-bridge-zoom-in", "Zoom in", "+", function () {
+    zoomControls.appendChild(createControlButton("mermaid-bridge-zoom-in", "Zoom in", "zoomIn", function () {
       zoomBy(ZOOM_STEP);
     }));
-    zoomControls.appendChild(createControlButton("mermaid-bridge-zoom-out", "Zoom out", "-", function () {
+    zoomControls.appendChild(createControlButton("mermaid-bridge-zoom-out", "Zoom out", "zoomOut", function () {
       zoomBy(1 / ZOOM_STEP);
     }));
 
     const controls = document.createElement("div");
     controls.className = "mermaid-bridge-controls";
     controls.setAttribute("aria-label", "Mermaid diagram pan controls");
-    controls.appendChild(createControlButton("mermaid-bridge-pan-up", "Pan up", "↑", function () {
+    controls.appendChild(createControlButton("mermaid-bridge-pan-up", "Pan up", "panUp", function () {
       panBy(0, -PAN_STEP);
     }));
-    controls.appendChild(createControlButton("mermaid-bridge-pan-left", "Pan left", "←", function () {
+    controls.appendChild(createControlButton("mermaid-bridge-pan-left", "Pan left", "panLeft", function () {
       panBy(-PAN_STEP, 0);
     }));
-    controls.appendChild(createControlButton("mermaid-bridge-reset-view", "Reset view", "⟳", resetView));
-    controls.appendChild(createControlButton("mermaid-bridge-pan-right", "Pan right", "→", function () {
+    controls.appendChild(createControlButton("mermaid-bridge-reset-view", "Reset view", "reset", resetView));
+    controls.appendChild(createControlButton("mermaid-bridge-pan-right", "Pan right", "panRight", function () {
       panBy(PAN_STEP, 0);
     }));
-    controls.appendChild(createControlButton("mermaid-bridge-pan-down", "Pan down", "↓", function () {
+    controls.appendChild(createControlButton("mermaid-bridge-pan-down", "Pan down", "panDown", function () {
       panBy(0, PAN_STEP);
     }));
 
