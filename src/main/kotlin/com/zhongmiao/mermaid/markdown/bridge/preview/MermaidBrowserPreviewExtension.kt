@@ -1,7 +1,7 @@
 package com.zhongmiao.mermaid.markdown.bridge.preview
 
 import com.intellij.openapi.util.Disposer
-import com.intellij.util.ui.UIUtil
+import com.intellij.ui.JBColor
 import org.intellij.plugins.markdown.extensions.MarkdownBrowserPreviewExtension
 import org.intellij.plugins.markdown.ui.preview.MarkdownHtmlPanel
 import org.intellij.plugins.markdown.ui.preview.ResourceProvider
@@ -40,9 +40,8 @@ class MermaidBrowserPreviewExtension internal constructor(
     override fun dispose() = Unit
 
     class Provider : MarkdownBrowserPreviewExtension.Provider {
-        @Suppress("DEPRECATION")
         override fun createBrowserExtension(panel: MarkdownHtmlPanel): MarkdownBrowserPreviewExtension {
-            val theme = if (UIUtil.isUnderDarcula()) "dark" else "default"
+            val theme = if (JBColor.isBright()) "default" else "dark"
             return MermaidBrowserPreviewExtension(theme).also {
                 Disposer.register(panel, it)
             }

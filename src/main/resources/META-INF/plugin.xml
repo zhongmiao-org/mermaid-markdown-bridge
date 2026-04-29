@@ -2,7 +2,7 @@
 <idea-plugin>
     <id>com.zhongmiao.mermaid.markdown.bridge</id>
     <name>Mermaid Markdown Bridge</name>
-    <vendor>zhongmiao</vendor>
+    <vendor email="liuwufangzhou@vip.qq.com" url="https://github.com/zhongmiao-org">zhongmiao</vendor>
     <description>Render Mermaid code blocks in JetBrains Markdown Preview.</description>
 
     <depends>com.intellij.modules.platform</depends>
