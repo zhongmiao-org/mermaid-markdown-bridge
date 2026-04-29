@@ -42,7 +42,12 @@ jobs:
             exit 0
           fi
 
-          if has_label "skip changelog" || has_label "release changelog"; then
+          if [[ "$HEAD_REF" == release/v* ]]; then
+            echo "Release PR branch detected; skipping changelog gate."
+            exit 0
+          fi
+
+          if has_label "skip changelog" || has_label "release changelog" || has_label "release"; then
             echo "Changelog gate skipped by PR label."
             exit 0
           fi
