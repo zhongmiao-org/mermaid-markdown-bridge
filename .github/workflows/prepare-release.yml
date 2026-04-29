@@ -11,14 +11,6 @@ on:
         description: Target SemVer version, for example 0.2.0
         required: true
         type: string
-      release_notes_en:
-        description: English changelog Markdown with emoji headings
-        required: true
-        type: string
-      release_notes_zh:
-        description: Chinese changelog Markdown with emoji headings
-        required: true
-        type: string
 
 jobs:
   prepare-release:
@@ -40,8 +32,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ inputs.version }}
-          RELEASE_NOTES_EN: ${{ inputs.release_notes_en }}
-          RELEASE_NOTES_ZH: ${{ inputs.release_notes_zh }}
         shell: bash
         run: |
           set -euo pipefail
@@ -52,8 +42,6 @@ jobs:
 
           ruby <<'RUBY'
           version = ENV.fetch("VERSION")
-          notes_en = ENV.fetch("RELEASE_NOTES_EN").strip
-          notes_zh = ENV.fetch("RELEASE_NOTES_ZH").strip
 
           unless version.match?(/\A\d+\.\d+\.\d+\z/)
             abort("Invalid SemVer version: #{version}")
@@ -73,14 +61,6 @@ jobs:
           unless (target_parts <=> current_parts).positive?
             abort("Target version #{version} must be greater than current version #{current}")
           end
-
-          emoji_headings = ["### ✨", "### 🔄", "### 🐛", "### 🔧", "### 📚", "### 🧪", "### 📦", "### 🧱"]
-          unless emoji_headings.any? { |heading| notes_en.include?(heading) }
-            abort("English release notes must include at least one emoji changelog heading")
-          end
-          unless emoji_headings.any? { |heading| notes_zh.include?(heading) }
-            abort("Chinese release notes must include at least one emoji changelog heading")
-          end
           RUBY
 
           git config user.email "action@github.com"
@@ -92,14 +72,28 @@ jobs:
           ruby <<'RUBY'
           version = ENV.fetch("VERSION")
           date = ENV.fetch("DATE")
-          notes_en = ENV.fetch("RELEASE_NOTES_EN").strip
-          notes_zh = ENV.fetch("RELEASE_NOTES_ZH").strip
+
+          EMOJI_HEADINGS = ["### ✨", "### 🔄", "### 🐛", "### 🔧", "### 📚", "### 🧪", "### 📦", "### 🧱"].freeze
+
+          def extract_unreleased(path)
+            content = File.read(path)
+            match = content.match(/^## \[Unreleased\]\s*$\n(?<body>.*?)(?=^## \[|\z)/m)
+            abort("Missing Unreleased section in #{path}") unless match
+
+            body = match[:body].strip
+            abort("Empty Unreleased section in #{path}") if body.empty?
+            unless EMOJI_HEADINGS.any? { |heading| body.include?(heading) }
+              abort("#{path} Unreleased must include at least one emoji changelog heading")
+            end
+
+            body
+          end
 
           gradle = File.read("gradle.properties")
           gradle.sub!(/^version\s*=.*$/, "version = #{version}")
           File.write("gradle.properties", gradle)
 
-          def insert_release(path, heading, notes)
+          def archive_unreleased(path, heading, notes)
             content = File.read(path)
             abort("#{path} already contains #{heading}") if content.include?(heading)
 
@@ -109,8 +103,11 @@ jobs:
             File.write(path, changed)
           end
 
-          insert_release("CHANGELOG.md", "## [#{version}] - #{date}", notes_en)
-          insert_release("CHANGELOG_zh.md", "## [#{version}]", notes_zh)
+          notes_en = extract_unreleased("CHANGELOG.md")
+          notes_zh = extract_unreleased("CHANGELOG_zh.md")
+
+          archive_unreleased("CHANGELOG.md", "## [#{version}] - #{date}", notes_en)
+          archive_unreleased("CHANGELOG_zh.md", "## [#{version}]", notes_zh)
 
           body = <<~BODY
           ## Summary
