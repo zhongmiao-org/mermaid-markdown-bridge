@@ -10,6 +10,7 @@
 - 新增 Markdown Preview 中 fenced `mermaid` code block 的 Mermaid 渲染能力。
 - 新增内置 Mermaid runtime 集成，并支持明暗主题基础适配。
 - 新增包含 flowchart 和 sequence diagram 的 Markdown 示例内容。
+- 新增基于项目 logo 的插件图标资源。
 - 新增 MIT License。
 - 新增英文和中文 README，覆盖安装、使用、兼容性和已知限制。
 

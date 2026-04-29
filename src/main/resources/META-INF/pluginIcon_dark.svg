@@ -1,0 +1,34 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bridge-accent" x1="12" y1="5" x2="36" y2="35" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF5F6D"/>
+      <stop offset="1" stop-color="#FF9A5A"/>
+    </linearGradient>
+    <linearGradient id="bridge-gear" x1="1" y1="24" x2="16" y2="39" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF9CA4"/>
+      <stop offset="1" stop-color="#FFD1B8"/>
+    </linearGradient>
+  </defs>
+
+  <path d="M3.2 31.8l2.1-1.7-.8-2.6 2.9-.5 1-2.8 2.4 1.7 2.6-1.2.7 3 2.5.9-1.9 2.2.6 2.7-2.9.3-1.4 2.6-2.2-1.9-2.8.9-.4-2.9-2.4-.7z" fill="url(#bridge-gear)" stroke="#8B949E" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M18.4 30.4H9.6a5.9 5.9 0 0 1-5.9-5.9V10.8a5.9 5.9 0 0 1 5.9-5.9h20.8a5.9 5.9 0 0 1 5.9 5.9v15.7" fill="#F8FAFC"/>
+  <path d="M18.4 30.4H9.6a5.9 5.9 0 0 1-5.9-5.9V10.8a5.9 5.9 0 0 1 5.9-5.9h20.8a5.9 5.9 0 0 1 5.9 5.9v15.7" stroke="#0B0F14" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <path d="M12.1 13.3h11.5c3.1 0 5.5 2.4 5.5 5.3s-2.4 5.3-5.5 5.3h-8.4c-2.5 0-4.5 1.9-4.5 4.3s2 4.3 4.5 4.3h9.5" stroke="#0B0F14" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M20.8 11.5l2 1.8-2 1.8" stroke="#0B0F14" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M20.2 22.1l-2 1.8 2 1.8" stroke="#0B0F14" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M17.4 30.7l2 1.8-2 1.8" stroke="#0B0F14" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <circle cx="10.9" cy="13.3" r="2.4" fill="url(#bridge-accent)"/>
+  <circle cx="24.6" cy="13.3" r="2.4" fill="url(#bridge-accent)"/>
+  <circle cx="16.4" cy="23.9" r="2.4" fill="url(#bridge-accent)"/>
+  <circle cx="20.7" cy="32.5" r="2.4" fill="url(#bridge-accent)"/>
+
+  <g>
+    <rect x="20.8" y="24.3" width="17" height="10.5" rx="2.2" fill="url(#bridge-accent)" stroke="#0B0F14" stroke-width="2"/>
+    <path d="M23.5 31.7v-4.9h1.9l1.7 3 1.7-3h1.9v4.9" stroke="#FFFFFF" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M34.4 27v4.7m0 0l-1.8-1.8m1.8 1.8l1.8-1.8" stroke="#FFFFFF" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23.5 31.7v-4.9h1.9l1.7 3 1.7-3h1.9v4.9" stroke="#0B0F14" stroke-width=".65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M34.4 27v4.7m0 0l-1.8-1.8m1.8 1.8l1.8-1.8" stroke="#0B0F14" stroke-width=".65" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
