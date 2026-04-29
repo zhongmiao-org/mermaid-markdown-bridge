@@ -17,6 +17,9 @@
 - 将插件版本准备为 `0.1.0`。
 - 将模板 README 替换为面向项目的文档和 GitHub 徽标。
 
+### 📚 文档
+- 扩充英文和中文 README，补充完整项目描述、扩展包范围、实现说明和发布流程。
+
 ### 🔧 CI/CD
 - 将旧的 main 分支自动创建 draft release 流程替换为需 review 的 release PR 流程。
 - 新增手动 release 准备 workflow，用于更新 `gradle.properties` 并归档中英文 changelog。

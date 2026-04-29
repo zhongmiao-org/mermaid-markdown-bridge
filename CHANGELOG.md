@@ -17,6 +17,9 @@
 - Prepared the plugin version for the `0.1.0` release.
 - Replaced template README content with project-focused documentation and GitHub badges.
 
+### 📚 Documentation
+- Expanded the English and Chinese README files with a complete project description, extension package scope, implementation notes, and release process details.
+
 ### 🔧 CI/CD
 - Replaced the old draft-release-on-main flow with a reviewed release PR workflow.
 - Added a manual release preparation workflow that bumps `gradle.properties` and archives bilingual changelog entries.
