@@ -10,6 +10,7 @@
 - Added Mermaid Markdown Preview rendering for fenced `mermaid` code blocks.
 - Added bundled Mermaid runtime integration with light and dark theme support.
 - Added demo Markdown content covering flowchart and sequence diagram examples.
+- Added plugin icon assets based on the project logo.
 - Added MIT License.
 - Added English and Chinese README documentation for installation, usage, compatibility, and limitations.
 
