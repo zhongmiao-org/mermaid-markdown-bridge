@@ -6,6 +6,13 @@
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-04-29
+
+### 🔄 Changed
+- Adjusted plugin icon SVG metadata to the JetBrains Marketplace required 40 px by 40 px size.
+- Added vendor contact metadata and third-party notices for the bundled Mermaid runtime.
+- Replaced deprecated theme detection API usage reported by IntelliJ Plugin Verifier.
+
 ### 🔄 Changed
 - Adjusted plugin icon SVG metadata to the JetBrains Marketplace required 40 px by 40 px size.
 - Added vendor contact metadata and third-party notices for the bundled Mermaid runtime.
