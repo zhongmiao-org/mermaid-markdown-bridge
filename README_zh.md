@@ -91,8 +91,6 @@ flowchart TD
 
 JetBrains IDE 目前不能仅因为 Markdown 文件中包含 fenced `mermaid` code block，就在插件未安装时可靠地推荐安装本插件。Marketplace 插件推荐主要依赖 JetBrains 支持的静态特征，例如文件类型、运行配置类型、Facet、模块类型、Artifact 类型和 dependency support。Markdown 文件已经由 JetBrains 内置 Markdown 插件处理，因此这个扩展包不会为了触发推荐而注册 `.md` 文件类型。
 
-如果需要争取 IDE 原生推荐，可以联系 JetBrains Marketplace support，询问是否能把 Markdown Preview 中的 Mermaid fenced code block 作为推荐信号。建议附上插件 ID、仓库地址、包含 `mermaid` fenced code block 的 Markdown 示例，以及项目边界说明：仅增强 Markdown Preview 渲染，不提供 Mermaid 语言服务或自定义编辑器。
-
 ## 兼容性
 
 - 目标平台：IntelliJ Platform `2025.2`。

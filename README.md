@@ -91,8 +91,6 @@ For now, install a ZIP from GitHub Releases:
 
 JetBrains IDEs cannot reliably recommend this plugin before it is installed just because a Markdown file contains a fenced `mermaid` code block. Marketplace plugin recommendations are based on JetBrains-supported feature signals such as file types, run configuration types, facets, module types, artifact types, and dependency support. Markdown files are already handled by the bundled JetBrains Markdown plugin, so this extension package does not register `.md` as its own file type.
 
-To request a native IDE recommendation for Mermaid Markdown content, contact JetBrains Marketplace support and ask whether Mermaid fenced code blocks in Markdown Preview can be used as a recommendation signal. Include the plugin ID, repository URL, a sample Markdown file containing a `mermaid` fenced code block, and the project scope: Markdown Preview rendering only, with no Mermaid language service or custom editor.
-
 ## Compatibility
 
 - Target platform: IntelliJ Platform `2025.2`.
