@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### ✨ 新增
+- 为 Markdown Preview 中已渲染的 Mermaid 图表新增单图缩放、重置和拖拽位移控制。
+
 ## [0.1.2]
 
 ### 🔄 变更

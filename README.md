@@ -32,6 +32,7 @@ The MVP focuses on the most common Markdown authoring workflow:
 - Works by extending the JetBrains Markdown preview browser layer, keeping the regular Markdown editor and preview panel intact.
 - Bundles Mermaid runtime resources with the plugin, so no extra Mermaid plugin is required.
 - Adapts the Mermaid theme to the IDE light or dark theme.
+- Adds per-diagram zoom, reset, and drag-to-pan controls in Markdown Preview.
 - Leaves normal Markdown code blocks untouched.
 
 ## How It Works

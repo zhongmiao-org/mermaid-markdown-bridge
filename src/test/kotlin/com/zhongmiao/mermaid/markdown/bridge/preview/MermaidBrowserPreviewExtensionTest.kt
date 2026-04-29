@@ -32,6 +32,22 @@ class MermaidBrowserPreviewExtensionTest {
     }
 
     @Test
+    fun `bridge script includes zoom and pan controls`() {
+        val extension = MermaidBrowserPreviewExtension("default")
+        val resource = extension.loadResource("mermaid-bridge.js") ?: error("Bridge script was not loaded")
+        val script = resource.content.toString(Charsets.UTF_8)
+
+        assertTrue(script.contains("data-mermaid-bridge-viewer"))
+        assertTrue(script.contains("mermaid-bridge-toolbar"))
+        assertTrue(script.contains("mermaid-bridge-canvas"))
+        assertTrue(script.contains("Zoom in"))
+        assertTrue(script.contains("Zoom out"))
+        assertTrue(script.contains("Reset view"))
+        assertTrue(script.contains("pointerdown"))
+        assertTrue(script.contains("wheel"))
+    }
+
+    @Test
     fun `loads bundled mermaid runtime`() {
         val extension = MermaidBrowserPreviewExtension("default")
         val resource = extension.loadResource("mermaid.min.js") ?: error("Mermaid runtime was not loaded")

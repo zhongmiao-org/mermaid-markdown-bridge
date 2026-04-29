@@ -32,6 +32,7 @@ MVP 聚焦最常见的 Markdown 写作流程：
 - 通过 JetBrains Markdown Preview 的浏览器扩展层工作，不替换原有 Markdown 编辑器或预览面板。
 - 插件内置 Mermaid runtime，不依赖额外安装 Mermaid 插件。
 - 根据 IDE 明暗主题切换 Mermaid 主题。
+- 在 Markdown Preview 中为每个 Mermaid 图表提供缩放、重置和拖拽位移控制。
 - 不影响普通 Markdown code block。
 
 ## 工作原理

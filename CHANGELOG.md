@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### ✨ Added
+- Added per-diagram zoom, reset, and drag-to-pan controls for rendered Mermaid diagrams in Markdown Preview.
+
 ## [0.1.2] - 2026-04-29
 
 ### 🔄 Changed
