@@ -11,6 +11,9 @@
 - 新增 vendor 联系元数据，并为内置 Mermaid runtime 补充第三方声明。
 - 替换 IntelliJ Plugin Verifier 报告的已废弃主题检测 API。
 
+### 📚 文档
+- 补充 Mermaid fenced code block 在 Markdown 中触发 Marketplace 推荐的限制，并说明插件不会为了安装推荐而注册 Markdown 文件类型。
+
 ## [0.1.1]
 
 ### ✨ 新增

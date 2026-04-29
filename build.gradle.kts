@@ -28,7 +28,7 @@ dependencies {
 // Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html
 intellijPlatform {
     pluginConfiguration {
-        description = "Render Mermaid code blocks in JetBrains Markdown Preview."
+        description = "Render Mermaid fenced code blocks in JetBrains Markdown Preview."
 
         val changelog = project.changelog // local variable for configuration cache compatibility
         // Get the latest available change notes from the changelog file

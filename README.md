@@ -87,6 +87,10 @@ For now, install a ZIP from GitHub Releases:
 3. Open the gear menu and choose `Install Plugin from Disk...`.
 4. Select the downloaded ZIP and restart the IDE when prompted.
 
+## Marketplace Discovery
+
+JetBrains IDEs cannot reliably recommend this plugin before it is installed just because a Markdown file contains a fenced `mermaid` code block. Marketplace plugin recommendations are based on JetBrains-supported feature signals such as file types, run configuration types, facets, module types, artifact types, and dependency support. Markdown files are already handled by the bundled JetBrains Markdown plugin, so this extension package does not register `.md` as its own file type.
+
 ## Compatibility
 
 - Target platform: IntelliJ Platform `2025.2`.
