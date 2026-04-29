@@ -10,6 +10,7 @@
   const MIN_SCALE = 0.25;
   const MAX_SCALE = 4;
   const ZOOM_STEP = 1.2;
+  const PAN_STEP = 80;
 
   let initialized = false;
   let scheduled = false;
@@ -115,36 +116,68 @@
       "  max-width: 100%;",
       "  height: auto;",
       "}",
-      ".mermaid-bridge-toolbar {",
+      ".mermaid-bridge-controls {",
       "  position: absolute;",
       "  z-index: 1;",
-      "  top: 8px;",
-      "  right: 8px;",
-      "  display: flex;",
-      "  gap: 4px;",
-      "  padding: 4px;",
-      "  border: 1px solid rgba(127, 127, 127, 0.3);",
-      "  border-radius: 6px;",
-      "  background: color-mix(in srgb, Canvas 88%, transparent);",
-      "  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);",
+      "  right: 16px;",
+      "  bottom: 16px;",
+      "  display: grid;",
+      "  grid-template-columns: repeat(3, 44px);",
+      "  grid-template-rows: repeat(3, 44px);",
+      "  gap: 6px;",
+      "  pointer-events: none;",
       "}",
-      ".mermaid-bridge-toolbar button {",
-      "  width: 28px;",
-      "  height: 28px;",
+      ".mermaid-bridge-zoom-controls {",
+      "  position: absolute;",
+      "  z-index: 1;",
+      "  right: 16px;",
+      "  bottom: 172px;",
+      "  display: grid;",
+      "  gap: 6px;",
+      "  pointer-events: none;",
+      "}",
+      ".mermaid-bridge-controls button,",
+      ".mermaid-bridge-zoom-controls button {",
+      "  width: 44px;",
+      "  height: 44px;",
       "  padding: 0;",
-      "  border: 0;",
-      "  border-radius: 4px;",
-      "  background: transparent;",
+      "  border: 1px solid rgba(127, 127, 127, 0.34);",
+      "  border-radius: 8px;",
+      "  background: color-mix(in srgb, Canvas 82%, transparent);",
       "  color: CanvasText;",
-      "  font: 600 16px/1 system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;",
+      "  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);",
       "  cursor: pointer;",
+      "  font: 700 20px/1 system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;",
+      "  pointer-events: auto;",
       "}",
-      ".mermaid-bridge-toolbar button:hover {",
+      ".mermaid-bridge-controls button:hover,",
+      ".mermaid-bridge-zoom-controls button:hover {",
       "  background: rgba(127, 127, 127, 0.18);",
       "}",
-      ".mermaid-bridge-toolbar button:focus-visible {",
+      ".mermaid-bridge-controls button:focus-visible,",
+      ".mermaid-bridge-zoom-controls button:focus-visible {",
       "  outline: 2px solid Highlight;",
       "  outline-offset: 1px;",
+      "}",
+      ".mermaid-bridge-pan-up {",
+      "  grid-column: 2;",
+      "  grid-row: 1;",
+      "}",
+      ".mermaid-bridge-pan-left {",
+      "  grid-column: 1;",
+      "  grid-row: 2;",
+      "}",
+      ".mermaid-bridge-reset-view {",
+      "  grid-column: 2;",
+      "  grid-row: 2;",
+      "}",
+      ".mermaid-bridge-pan-right {",
+      "  grid-column: 3;",
+      "  grid-row: 2;",
+      "}",
+      ".mermaid-bridge-pan-down {",
+      "  grid-column: 2;",
+      "  grid-row: 3;",
       "}"
     ].join("\n");
     document.head.appendChild(style);
@@ -154,9 +187,10 @@
     return Math.min(Math.max(value, min), max);
   }
 
-  function createToolbarButton(label, text, onClick) {
+  function createControlButton(className, label, text, onClick) {
     const button = document.createElement("button");
     button.type = "button";
+    button.className = className;
     button.textContent = text;
     button.title = label;
     button.setAttribute("aria-label", label);
@@ -212,6 +246,12 @@
       applyTransform();
     }
 
+    function panBy(deltaX, deltaY) {
+      state.x += deltaX;
+      state.y += deltaY;
+      applyTransform();
+    }
+
     function zoomBy(multiplier) {
       const rect = block.getBoundingClientRect();
       setScale(state.scale * multiplier, rect.width / 2, rect.height / 2);
@@ -224,19 +264,36 @@
       applyTransform();
     }
 
-    const toolbar = document.createElement("div");
-    toolbar.className = "mermaid-bridge-toolbar";
-    toolbar.setAttribute("aria-label", "Mermaid diagram controls");
-    toolbar.appendChild(createToolbarButton("Zoom in", "+", function () {
+    const zoomControls = document.createElement("div");
+    zoomControls.className = "mermaid-bridge-zoom-controls";
+    zoomControls.setAttribute("aria-label", "Mermaid diagram zoom controls");
+    zoomControls.appendChild(createControlButton("mermaid-bridge-zoom-in", "Zoom in", "+", function () {
       zoomBy(ZOOM_STEP);
     }));
-    toolbar.appendChild(createToolbarButton("Zoom out", "-", function () {
+    zoomControls.appendChild(createControlButton("mermaid-bridge-zoom-out", "Zoom out", "-", function () {
       zoomBy(1 / ZOOM_STEP);
     }));
-    toolbar.appendChild(createToolbarButton("Reset view", "1:1", resetView));
 
-    block.appendChild(toolbar);
+    const controls = document.createElement("div");
+    controls.className = "mermaid-bridge-controls";
+    controls.setAttribute("aria-label", "Mermaid diagram pan controls");
+    controls.appendChild(createControlButton("mermaid-bridge-pan-up", "Pan up", "↑", function () {
+      panBy(0, -PAN_STEP);
+    }));
+    controls.appendChild(createControlButton("mermaid-bridge-pan-left", "Pan left", "←", function () {
+      panBy(-PAN_STEP, 0);
+    }));
+    controls.appendChild(createControlButton("mermaid-bridge-reset-view", "Reset view", "⟳", resetView));
+    controls.appendChild(createControlButton("mermaid-bridge-pan-right", "Pan right", "→", function () {
+      panBy(PAN_STEP, 0);
+    }));
+    controls.appendChild(createControlButton("mermaid-bridge-pan-down", "Pan down", "↓", function () {
+      panBy(0, PAN_STEP);
+    }));
+
     block.appendChild(canvas);
+    block.appendChild(zoomControls);
+    block.appendChild(controls);
     block.setAttribute(VIEWER_ATTR, "true");
     applyTransform();
 

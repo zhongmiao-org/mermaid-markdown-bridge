@@ -38,11 +38,16 @@ class MermaidBrowserPreviewExtensionTest {
         val script = resource.content.toString(Charsets.UTF_8)
 
         assertTrue(script.contains("data-mermaid-bridge-viewer"))
-        assertTrue(script.contains("mermaid-bridge-toolbar"))
+        assertTrue(script.contains("mermaid-bridge-controls"))
+        assertTrue(script.contains("mermaid-bridge-zoom-controls"))
         assertTrue(script.contains("mermaid-bridge-canvas"))
         assertTrue(script.contains("Zoom in"))
         assertTrue(script.contains("Zoom out"))
         assertTrue(script.contains("Reset view"))
+        assertTrue(script.contains("Pan up"))
+        assertTrue(script.contains("Pan down"))
+        assertTrue(script.contains("Pan left"))
+        assertTrue(script.contains("Pan right"))
         assertTrue(script.contains("pointerdown"))
         assertTrue(script.contains("wheel"))
     }
