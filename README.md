@@ -1,19 +1,53 @@
+<div align="center">
+
+<p>
+  <img src="./src/main/resources/META-INF/brand/md.svg" width="72" height="72" alt="Markdown logo" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./src/main/resources/META-INF/brand/plus-dark.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="./src/main/resources/META-INF/brand/plus-light.svg" />
+    <img src="./src/main/resources/META-INF/brand/plus-light.svg" width="72" height="72" alt="+" />
+  </picture>
+  <img src="./src/main/resources/META-INF/brand/mermaid.svg" width="72" height="72" alt="Mermaid logo" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./src/main/resources/META-INF/brand/equal-dark.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="./src/main/resources/META-INF/brand/equal-light.svg" />
+    <img src="./src/main/resources/META-INF/brand/equal-light.svg" width="72" height="72" alt="=" />
+  </picture>
+  <img src="./src/main/resources/META-INF/logo.svg" width="72" height="72" alt="Mermaid Markdown Bridge logo" />
+</p>
+
 # Mermaid Markdown Bridge
 
 [![Build](https://github.com/zhongmiao-org/mermaid-markdown-bridge/actions/workflows/build.yml/badge.svg)](https://github.com/zhongmiao-org/mermaid-markdown-bridge/actions/workflows/build.yml)
 [![Changelog](https://github.com/zhongmiao-org/mermaid-markdown-bridge/actions/workflows/changelog.yml/badge.svg)](https://github.com/zhongmiao-org/mermaid-markdown-bridge/actions/workflows/changelog.yml)
 [![GitHub release](https://img.shields.io/github/v/release/zhongmiao-org/mermaid-markdown-bridge?include_prereleases&sort=semver)](https://github.com/zhongmiao-org/mermaid-markdown-bridge/releases)
+[![JetBrains Marketplace](https://img.shields.io/jetbrains/plugin/v/31518?label=Marketplace&logo=jetbrains)](https://plugins.jetbrains.com/plugin/31518-mermaid-markdown-bridge)
+[![Marketplace downloads](https://img.shields.io/jetbrains/plugin/d/31518?label=Downloads&logo=jetbrains)](https://plugins.jetbrains.com/plugin/31518-mermaid-markdown-bridge)
+[![GitHub issues](https://img.shields.io/github/issues/zhongmiao-org/mermaid-markdown-bridge)](https://github.com/zhongmiao-org/mermaid-markdown-bridge/issues)
 [![License](https://img.shields.io/github/license/zhongmiao-org/mermaid-markdown-bridge)](./LICENSE)
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.3.21-7F52FF?logo=kotlin&logoColor=white)
 ![JetBrains Platform](https://img.shields.io/badge/JetBrains%20Platform-2025.2-000000?logo=jetbrains&logoColor=white)
 
-[中文文档](./README_zh.md)
+English | [简体中文](./README_zh.md)
 
-Render Mermaid code blocks directly inside the built-in JetBrains Markdown Preview.
+</div>
 
-Mermaid Markdown Bridge is a JetBrains IDE Markdown Preview extension package. It extends the bundled JetBrains Markdown Preview so Markdown authors can see Mermaid diagrams in the preview pane without switching editors, installing a separate Mermaid language plugin, or replacing the IDE's Markdown tooling.
+<!-- Plugin description -->
 
-The project is intentionally narrow: it is a preview rendering bridge for Mermaid fenced code blocks. It is not a Mermaid language support plugin, not a standalone diagram editor, and not a replacement for JetBrains Markdown Preview.
+Render Mermaid fenced code blocks directly inside the built-in JetBrains Markdown Preview.
+
+Mermaid Markdown Bridge is a JetBrains IDE Markdown Preview extension package. It extends the official JetBrains Markdown plugin preview so Markdown authors can see Mermaid diagrams in the preview pane without switching editors, installing a separate Mermaid language plugin, or replacing the IDE's Markdown tooling.
+
+The project is intentionally narrow: it is a preview rendering bridge for Mermaid fenced code blocks. It is not a Mermaid language support plugin, not a standalone diagram editor, and not a replacement for JetBrains Markdown Preview. The goal is to make Mermaid diagrams feel natural in the existing Markdown Preview, with a rendering style that stays close to the familiar GitHub Markdown and Mermaid preview experience.
+
+- Renders fenced `mermaid` code blocks in Markdown Preview.
+- Bundles the Mermaid runtime locally for diagram rendering.
+- Adapts Mermaid output to the IDE light or dark theme.
+- Supports preview controls: hold `Control` / `Command` and use the mouse wheel over a diagram to zoom, then drag the diagram to pan.
+- Keeps the rendered diagram experience close to familiar GitHub Markdown and Mermaid previews.
+- Does not add Mermaid language services, syntax highlighting, completion, inspections, or `.mmd`/`.mermaid` file type support.
+
+<!-- Plugin description end -->
 
 ## Project Goal
 
@@ -32,7 +66,9 @@ The MVP focuses on the most common Markdown authoring workflow:
 - Works by extending the JetBrains Markdown preview browser layer, keeping the regular Markdown editor and preview panel intact.
 - Bundles Mermaid runtime resources with the plugin, so no extra Mermaid plugin is required.
 - Adapts the Mermaid theme to the IDE light or dark theme.
-- Leaves normal Markdown code blocks untouched.
+- Supports direct diagram preview controls with `Control` / `Command` + mouse wheel zoom and drag-to-pan.
+- Keeps normal Markdown code blocks untouched.
+- Keeps the rendered preview visually familiar for users who expect GitHub-style Markdown diagrams.
 
 ## How It Works
 
@@ -66,9 +102,17 @@ Open the file in a supported JetBrains IDE and switch to Markdown Preview. The M
 
 See [examples/demo.md](./examples/demo.md) for flowchart and sequence diagram examples.
 
+## Diagram Controls
+
+Rendered Mermaid diagrams support basic preview navigation without changing the Markdown editor or the surrounding preview page:
+
+- Hold `Control` / `Command` and use the mouse wheel over a diagram to zoom in or out.
+- Drag the rendered diagram to pan around the current diagram view.
+- Use the on-diagram controls to zoom, pan, or reset the diagram view.
+
 ## Scope
 
-This extension package only enhances Markdown Preview rendering. It intentionally does not include:
+This extension package only enhances the official JetBrains Markdown Preview rendering path. It intentionally does not include:
 
 - `.mmd` or `.mermaid` file type registration;
 - Mermaid syntax highlighting;
@@ -76,20 +120,39 @@ This extension package only enhances Markdown Preview rendering. It intentionall
 - settings UI;
 - a custom editor or custom Markdown preview panel.
 
+Markdown editing, Markdown parsing, preview layout, and the surrounding preview UI remain owned by the JetBrains Markdown plugin.
+
 ## Installation
 
-The plugin is not yet listed on JetBrains Marketplace.
+Install the plugin from [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/31518-mermaid-markdown-bridge), or install a ZIP from GitHub Releases:
 
-For now, install a ZIP from GitHub Releases:
+1. In the IDE, open `Settings/Preferences` > `Plugins`.
+2. Search for `Mermaid Markdown Bridge` in Marketplace and install it.
+3. Restart the IDE when prompted.
 
-1. Download the latest plugin ZIP from [GitHub Releases](https://github.com/zhongmiao-org/mermaid-markdown-bridge/releases).
-2. In the IDE, open `Settings/Preferences` > `Plugins`.
-3. Open the gear menu and choose `Install Plugin from Disk...`.
-4. Select the downloaded ZIP and restart the IDE when prompted.
+For manual installation, download the latest plugin ZIP from [GitHub Releases](https://github.com/zhongmiao-org/mermaid-markdown-bridge/releases), then use the plugin gear menu and choose `Install Plugin from Disk...`.
 
-## Marketplace Discovery
+## Marketplace Notes
 
-JetBrains IDEs cannot reliably recommend this plugin before it is installed just because a Markdown file contains a fenced `mermaid` code block. Marketplace plugin recommendations are based on JetBrains-supported feature signals such as file types, run configuration types, facets, module types, artifact types, and dependency support. Markdown files are already handled by the bundled JetBrains Markdown plugin, so this extension package does not register `.md` as its own file type.
+JetBrains Marketplace does not automatically build the plugin overview from this README.
+
+- `Description` is extracted from the plugin metadata, including `plugin.xml` and the Gradle IntelliJ Platform `pluginConfiguration.description` value used during packaging.
+- `Getting Started` is a separate Marketplace admin-panel field. If it shows `You haven't provided any information yet.`, that field has not been filled in on Marketplace; it is not a README rendering problem.
+- README content is still useful as public documentation and can be linked from Marketplace as documentation or source material, but it does not automatically populate the Getting Started section.
+
+JetBrains IDEs also cannot reliably recommend this plugin before it is installed just because a Markdown file contains a fenced `mermaid` code block. Marketplace plugin recommendations are based on JetBrains-supported feature signals such as file types, run configuration types, facets, module types, artifact types, and dependency support. Markdown files are already handled by the bundled JetBrains Markdown plugin, so this extension package does not register `.md` as its own file type.
+
+## Third-Party Runtime
+
+This plugin bundles Mermaid for local preview rendering:
+
+- Project: Mermaid
+- Website: https://mermaid.js.org/
+- Source: https://github.com/mermaid-js/mermaid
+- License: MIT License
+- Bundled file: `src/main/resources/mermaid/mermaid.min.js`
+
+Mermaid is used only inside the JetBrains Markdown Preview browser context to render Mermaid fenced code blocks. Mermaid Markdown Bridge does not use Mermaid to collect, upload, or transfer user data.
 
 ## Compatibility
 
@@ -104,7 +167,7 @@ JetBrains IDEs cannot reliably recommend this plugin before it is installed just
 - Mermaid language services are out of scope for the MVP.
 - `.mmd` and `.mermaid` file types are not registered.
 - Syntax highlighting, completion, inspections, intentions, and settings UI are not included.
-- Marketplace badges will be added after the plugin receives a JetBrains Marketplace plugin ID.
+- JetBrains Marketplace page: https://plugins.jetbrains.com/plugin/31518-mermaid-markdown-bridge
 
 ## Release Process
 
