@@ -1,7 +1,10 @@
+import org.gradle.api.GradleException
+import org.gradle.kotlin.dsl.assign
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
-import org.gradle.api.GradleException
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("org.jetbrains.kotlin.jvm") version "2.3.21"
@@ -16,15 +19,28 @@ repositories {
     }
 }
 
+kotlin {
+    jvmToolchain(17)
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
+    }
+}
+
 dependencies {
     testImplementation("junit:junit:4.13.2")
 
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
     intellijPlatform {
-        create(
-            providers.gradleProperty("platformType"),
-            providers.gradleProperty("platformVersion"),
-        )
+        val platformType = providers.gradleProperty("platformType").get().uppercase()
+        val platformVersion = providers.gradleProperty("platformVersion")
+
+        when (platformType) {
+            "IDEA" -> intellijIdea(platformVersion)
+            "IC" -> intellijIdeaCommunity(platformVersion)
+            "IU" -> intellijIdeaUltimate(platformVersion)
+            "WS" -> webstorm(platformVersion)
+            else -> create(platformType, platformVersion)
+        }
         bundledPlugin("org.intellij.plugins.markdown")
         testFramework(TestFrameworkType.Platform)
     }
@@ -33,6 +49,11 @@ dependencies {
 // Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html
 intellijPlatform {
     pluginConfiguration {
+        ideaVersion {
+            sinceBuild = "231"
+            untilBuild = provider { null }
+        }
+
         // Extract the <!-- Plugin description --> section from README.md for the Marketplace description.
         description = providers.fileContents(layout.projectDirectory.file("README.md")).asText.map {
             val start = "<!-- Plugin description -->"
@@ -57,6 +78,25 @@ intellijPlatform {
                     Changelog.OutputType.HTML,
                 )
             }
+        }
+    }
+
+    pluginVerification {
+        ides {
+            create(IntelliJPlatformType.CLion, "2023.1.7")
+            create(IntelliJPlatformType.DataGrip, "2023.1.2")
+            create(IntelliJPlatformType.DataSpell, "2023.1.6")
+            create(IntelliJPlatformType.GoLand, "2023.1.6")
+            create(IntelliJPlatformType.IntellijIdeaCommunity, "2023.1.7")
+            create(IntelliJPlatformType.IntellijIdeaUltimate, "2023.1.7")
+            create(IntelliJPlatformType.PhpStorm, "2023.1.6")
+            create(IntelliJPlatformType.PyCharmCommunity, "2023.1.6")
+            create(IntelliJPlatformType.PyCharmProfessional, "2023.1.6")
+            create(IntelliJPlatformType.Rider, "2023.1.7") {
+                useInstaller = false
+            }
+            create(IntelliJPlatformType.RubyMine, "2023.1.7")
+            create(IntelliJPlatformType.WebStorm, "2023.1.6")
         }
     }
 }

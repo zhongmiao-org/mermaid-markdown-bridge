@@ -416,14 +416,18 @@
       return;
     }
 
-    Promise.resolve(window.mermaid.run({ nodes: blocks }))
-      .then(function () {
-        enhanceRenderedBlocks(blocks);
-        markRendered(blocks);
-      })
-      .catch(function (error) {
-        markFailed(blocks, error);
-      });
+    try {
+      Promise.resolve(window.mermaid.run({ nodes: blocks }))
+        .then(function () {
+          enhanceRenderedBlocks(blocks);
+          markRendered(blocks);
+        })
+        .catch(function (error) {
+          markFailed(blocks, error);
+        });
+    } catch (error) {
+      markFailed(blocks, error);
+    }
   }
 
   function scheduleRender() {

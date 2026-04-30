@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+### 🔄 Changed
+- Declared JetBrains IDE compatibility from IntelliJ Platform `2023.1` onward and lowered the build baseline to IDEA Community `2023.1.7`.
+- Expanded plugin verification coverage across JetBrains IntelliJ-based IDE product families supported by the Gradle verifier at their 2023+ compatibility lower bounds.
+
 ## [1.0.0] - 2026-04-30
 
 ### ✨ Added

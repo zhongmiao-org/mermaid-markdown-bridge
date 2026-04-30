@@ -66,6 +66,9 @@ class MermaidBrowserPreviewExtensionTest {
         assertContains(script, "svg.addEventListener(\"pointerdown\"")
         assertContains(script, "svg.addEventListener(\"pointermove\"")
         assertContains(script, "svg.addEventListener(\"dblclick\"")
+        assertContains(script, "try {")
+        assertContains(script, "Promise.resolve(window.mermaid.run({ nodes: blocks }))")
+        assertContains(script, "} catch (error) {")
         assertContains(script, "fill: \"currentColor\"")
         assertContains(script, "M256 512H170.666667")
 
