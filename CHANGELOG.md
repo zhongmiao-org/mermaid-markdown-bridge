@@ -9,6 +9,11 @@
 ### ✨ Added
 - Added preview-only Mermaid diagram zoom, pan, reset, and drag controls without changing Markdown editor or preview page theming.
 
+### 📚 Documentation
+- Polished the English and Chinese README files with clearer Marketplace-facing documentation, preview-only scope, GitHub-like rendering expectations, Mermaid third-party runtime notes, updated brand asset placement, and a theme-aware Markdown logo variant.
+- Expanded the demo Markdown file with Mermaid example diagrams and upstream Mermaid source attribution.
+- Updated plugin description metadata to align with the README-based Marketplace description.
+
 ## [0.1.2] - 2026-04-29
 
 ### 🔄 Changed

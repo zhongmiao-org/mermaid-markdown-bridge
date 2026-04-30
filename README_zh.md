@@ -1,7 +1,11 @@
 <div align="center">
 
 <p>
-  <img src="./src/main/resources/META-INF/brand/md.svg" width="72" height="72" alt="Markdown logo" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./src/main/resources/META-INF/brand/md-dark.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="./src/main/resources/META-INF/brand/md.svg" />
+    <img src="./src/main/resources/META-INF/brand/md.svg" width="72" height="72" alt="Markdown logo" />
+  </picture>
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./src/main/resources/META-INF/brand/plus-dark.svg" />
     <source media="(prefers-color-scheme: light)" srcset="./src/main/resources/META-INF/brand/plus-light.svg" />
@@ -89,7 +93,7 @@ flowchart TD
 
 在支持的 JetBrains IDE 中打开该 Markdown 文件并切换到 Markdown Preview，Mermaid block 会在预览面板中渲染为图表。
 
-示例见 [examples/demo.md](./examples/demo.md)，其中包含 flowchart 和 sequence diagram。
+示例见 [examples/demo.md](./examples/demo.md)，其中包含 flowchart、sequence、gantt、class、state、pie、git graph、user journey 和 C4 图。
 
 ## 图表操作
 
@@ -120,16 +124,6 @@ Markdown 编辑、Markdown 解析、预览页面布局以及预览面板周边 U
 3. 按提示重启 IDE。
 
 如需手动安装，可从 [GitHub Releases](https://github.com/zhongmiao-org/mermaid-markdown-bridge/releases) 下载最新插件 ZIP，然后在插件页齿轮菜单中选择 `Install Plugin from Disk...`。
-
-## Marketplace 说明
-
-JetBrains Marketplace 不会自动用 README 生成插件 Overview 的所有内容。
-
-- `Description` 来自插件元数据，包括 `plugin.xml`，以及打包发布时 Gradle IntelliJ Platform `pluginConfiguration.description` 里的值。
-- `Getting Started` 是 Marketplace 后台单独填写的字段。如果页面显示 `You haven't provided any information yet.`，说明 Marketplace 后台还没有填写这个字段，不是 README 没有渲染出来。
-- README 仍然适合作为公开文档，也可以在 Marketplace 里作为 documentation/source 链接引用，但它不会自动填充 Getting Started 区域。
-
-JetBrains IDE 目前也不能仅因为 Markdown 文件中包含 fenced `mermaid` code block，就在插件未安装时可靠地推荐安装本插件。Marketplace 插件推荐主要依赖 JetBrains 支持的静态特征，例如文件类型、运行配置类型、Facet、模块类型、Artifact 类型和 dependency support。Markdown 文件已经由 JetBrains 内置 Markdown 插件处理，因此这个扩展包不会为了触发推荐而注册 `.md` 文件类型。
 
 ## 第三方 Runtime
 

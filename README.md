@@ -1,7 +1,11 @@
 <div align="center">
 
 <p>
-  <img src="./src/main/resources/META-INF/brand/md.svg" width="72" height="72" alt="Markdown logo" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./src/main/resources/META-INF/brand/md-dark.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="./src/main/resources/META-INF/brand/md.svg" />
+    <img src="./src/main/resources/META-INF/brand/md.svg" width="72" height="72" alt="Markdown logo" />
+  </picture>
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./src/main/resources/META-INF/brand/plus-dark.svg" />
     <source media="(prefers-color-scheme: light)" srcset="./src/main/resources/META-INF/brand/plus-light.svg" />
@@ -100,7 +104,7 @@ flowchart TD
 
 Open the file in a supported JetBrains IDE and switch to Markdown Preview. The Mermaid block is converted into a diagram in the preview pane.
 
-See [examples/demo.md](./examples/demo.md) for flowchart and sequence diagram examples.
+See [examples/demo.md](./examples/demo.md) for examples covering flowchart, sequence, gantt, class, state, pie, git graph, user journey, and C4 diagrams.
 
 ## Diagram Controls
 
@@ -131,16 +135,6 @@ Install the plugin from [JetBrains Marketplace](https://plugins.jetbrains.com/pl
 3. Restart the IDE when prompted.
 
 For manual installation, download the latest plugin ZIP from [GitHub Releases](https://github.com/zhongmiao-org/mermaid-markdown-bridge/releases), then use the plugin gear menu and choose `Install Plugin from Disk...`.
-
-## Marketplace Notes
-
-JetBrains Marketplace does not automatically build the plugin overview from this README.
-
-- `Description` is extracted from the plugin metadata, including `plugin.xml` and the Gradle IntelliJ Platform `pluginConfiguration.description` value used during packaging.
-- `Getting Started` is a separate Marketplace admin-panel field. If it shows `You haven't provided any information yet.`, that field has not been filled in on Marketplace; it is not a README rendering problem.
-- README content is still useful as public documentation and can be linked from Marketplace as documentation or source material, but it does not automatically populate the Getting Started section.
-
-JetBrains IDEs also cannot reliably recommend this plugin before it is installed just because a Markdown file contains a fenced `mermaid` code block. Marketplace plugin recommendations are based on JetBrains-supported feature signals such as file types, run configuration types, facets, module types, artifact types, and dependency support. Markdown files are already handled by the bundled JetBrains Markdown plugin, so this extension package does not register `.md` as its own file type.
 
 ## Third-Party Runtime
 
