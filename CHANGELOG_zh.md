@@ -9,6 +9,11 @@
 ### ✨ 新增
 - 新增仅作用于 Mermaid 图表预览块的缩放、平移、重置和拖拽控件，不改变 Markdown 编辑区或预览页面主题。
 
+### 📚 文档
+- 完善英文和中文 README，补充面向 Marketplace 的说明、仅用于预览的边界、贴近 GitHub 的渲染预期、Mermaid 第三方 runtime 说明、品牌资源位置调整，以及适配暗色主题的 Markdown logo 变体。
+- 扩展示例 Markdown 文件，加入多种 Mermaid 示例图，并补充 Mermaid 上游来源说明。
+- 更新插件描述元数据，使其与基于 README 生成的 Marketplace description 保持一致。
+
 ## [0.1.2]
 
 ### 🔄 变更
