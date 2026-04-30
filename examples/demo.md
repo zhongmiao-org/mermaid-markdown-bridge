@@ -169,13 +169,3 @@ BiRel(SystemAA, SystemE, "Uses")
 Rel(SystemAA, SystemC, "Sends e-mails", "SMTP")
 Rel(SystemC, customerA, "Sends e-mails to")
 ```
-
-## Ordinary Code Block
-
-This block is intentionally not Mermaid and should stay a normal Markdown code block.
-
-```kotlin
-fun ordinaryCodeBlock() {
-    println("This should stay a normal Markdown code block.")
-}
-```
