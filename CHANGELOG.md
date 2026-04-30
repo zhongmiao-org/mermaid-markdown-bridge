@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### ✨ Added
+- Added preview-only Mermaid diagram zoom, pan, reset, and drag controls without changing Markdown editor or preview page theming.
+
 ## [0.1.2] - 2026-04-29
 
 ### 🔄 Changed
