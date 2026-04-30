@@ -6,6 +6,12 @@
 
 ## [Unreleased]
 
+## [1.1.0]
+
+### 🔄 变更
+- 声明兼容 IntelliJ Platform `2023.1` 及后续版本的 JetBrains IDE，并将构建基线下调到 IDEA Community `2023.1.7`。
+- 将插件验证范围扩展到 Gradle verifier 可支持的 JetBrains IntelliJ-based IDE 产品族 2023+ 兼容下限。
+
 ### 🔄 变更
 - 声明兼容 IntelliJ Platform `2023.1` 及后续版本的 JetBrains IDE，并将构建基线下调到 IDEA Community `2023.1.7`。
 - 将插件验证范围扩展到 Gradle verifier 可支持的 JetBrains IntelliJ-based IDE 产品族 2023+ 兼容下限。
