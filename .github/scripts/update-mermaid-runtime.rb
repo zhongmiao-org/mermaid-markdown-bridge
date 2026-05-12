@@ -5,6 +5,21 @@ version = ARGV.fetch(0)
 tag = ARGV[1] || "mermaid@#{version}"
 release_url = ARGV[2] || "https://github.com/mermaid-js/mermaid/releases/tag/mermaid%40#{version}"
 
+CHANGELOG_HEADINGS = {
+  "CHANGELOG.md" => [
+    "### ✨ Added",
+    "### 🔄 Changed",
+    "### 📚 Documentation",
+    "### 🔧 CI/CD"
+  ],
+  "CHANGELOG_zh.md" => [
+    "### ✨ 新增",
+    "### 🔄 变更",
+    "### 📚 文档",
+    "### 🔧 CI/CD"
+  ]
+}.freeze
+
 runtime_path = "src/main/resources/mermaid/mermaid.min.js"
 runtime = File.read(runtime_path)
 versions = runtime.scan(/version:"(\d+\.\d+\.\d+)"/).flatten.uniq
@@ -23,18 +38,39 @@ end
 
 def ensure_changelog_entry(path, heading, entry)
   content = File.read(path)
-  return if content.include?(entry)
+  match = content.match(/^## \[Unreleased\]\s*$\n(?<body>.*?)(?=^## \[|\z)/m)
+  abort("Missing Unreleased section in #{path}") unless match
 
-  unreleased = /^## \[Unreleased\]\n/
-  abort("Missing Unreleased section in #{path}") unless content.match?(unreleased)
+  body = match[:body].strip
+  return if body.include?(entry)
 
-  if content.include?("#{heading}\n")
-    content.sub!("#{heading}\n", "#{heading}\n#{entry}\n")
+  if body.match?(/(^|\n)#{Regexp.escape(heading)}\n/)
+    body.sub!(/(^|\n)#{Regexp.escape(heading)}\n/) do
+      "#{Regexp.last_match(1)}#{heading}\n#{entry}\n"
+    end
   else
-    content.sub!(unreleased, "## [Unreleased]\n\n#{heading}\n#{entry}\n")
+    headings = CHANGELOG_HEADINGS.fetch(path)
+    target_index = headings.index(heading)
+    abort("Unsupported changelog heading #{heading} for #{path}") unless target_index
+
+    insert_before = headings.drop(target_index + 1).find do |candidate|
+      body.match?(/(^|\n)#{Regexp.escape(candidate)}\n/)
+    end
+
+    insert_block = "#{heading}\n#{entry}"
+    if insert_before
+      body.sub!(/(^|\n)#{Regexp.escape(insert_before)}\n/) do
+        "#{Regexp.last_match(1)}#{insert_block}\n\n#{insert_before}\n"
+      end
+    elsif body.empty?
+      body = insert_block
+    else
+      body = "#{body.rstrip}\n\n#{insert_block}"
+    end
   end
 
-  File.write(path, content)
+  updated_unreleased = "## [Unreleased]\n\n#{body.strip}\n\n"
+  File.write(path, content.sub(match[0], updated_unreleased))
 end
 
 update_readme_badge("README.md", version, release_url)
