@@ -1,5 +1,7 @@
 package com.zhongmiao.mermaid.markdown.bridge.preview
 
+import java.nio.file.Files
+import java.nio.file.Path
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -125,6 +127,14 @@ class MermaidBrowserPreviewExtensionTest {
     }
 
     @Test
+    fun `documents bundled mermaid runtime version`() {
+        val version = loadBundledMermaidVersion()
+
+        assertDocumentsMermaidVersion("README.md", version)
+        assertDocumentsMermaidVersion("README_zh.md", version)
+    }
+
+    @Test
     fun `does not load unknown resources`() {
         val extension = MermaidBrowserPreviewExtension("default")
 
@@ -135,6 +145,26 @@ class MermaidBrowserPreviewExtensionTest {
         val extension = MermaidBrowserPreviewExtension("default")
         val resource = extension.loadResource("mermaid-bridge.js") ?: error("Bridge script was not loaded")
         return resource.content.toString(Charsets.UTF_8)
+    }
+
+    private fun loadBundledMermaidVersion(): String {
+        val extension = MermaidBrowserPreviewExtension("default")
+        val resource = extension.loadResource("mermaid.min.js") ?: error("Mermaid runtime was not loaded")
+        val script = resource.content.toString(Charsets.UTF_8)
+        val versions = Regex("""version:"(\d+\.\d+\.\d+)"""")
+            .findAll(script)
+            .map { it.groupValues[1] }
+            .toSet()
+
+        assertEquals("Expected exactly one bundled Mermaid runtime version", 1, versions.size)
+        return versions.single()
+    }
+
+    private fun assertDocumentsMermaidVersion(path: String, version: String) {
+        val readme = Files.readString(Path.of(path))
+
+        assertContains(readme, "https://img.shields.io/badge/Mermaid-$version-ff3670")
+        assertContains(readme, "https://github.com/mermaid-js/mermaid/releases/tag/mermaid%40$version")
     }
 
     private fun assertContains(value: String, expected: String) {

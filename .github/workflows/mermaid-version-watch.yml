@@ -1,0 +1,170 @@
+name: Mermaid Version Watch
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * *"
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    name: Watch Mermaid releases
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v6
+
+      - name: Compare bundled runtime with upstream
+        id: mermaid
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ruby <<'RUBY'
+          require "json"
+
+          runtime_path = "src/main/resources/mermaid/mermaid.min.js"
+          runtime = File.read(runtime_path)
+          versions = runtime.scan(/version:"(\d+\.\d+\.\d+)"/).flatten.uniq
+          abort("Missing Mermaid version in #{runtime_path}") if versions.empty?
+          abort("Ambiguous Mermaid versions in #{runtime_path}: #{versions.join(", ")}") if versions.length != 1
+
+          current_version = versions.first
+          releases = []
+          page = 1
+
+          loop do
+            json = `gh api "repos/mermaid-js/mermaid/releases?per_page=100&page=#{page}"`
+            abort("Failed to fetch Mermaid releases page #{page}") unless $?.success?
+
+            page_releases = JSON.parse(json)
+            break if page_releases.empty?
+
+            releases.concat(page_releases)
+            page += 1
+          end
+
+          candidates = releases.filter_map do |release|
+            next if release["draft"] || release["prerelease"]
+
+            match = release["tag_name"].to_s.match(/\Amermaid@(\d+\.\d+\.\d+)\z/)
+            next unless match
+
+            release.merge("version" => match[1])
+          end
+
+          abort("No stable mermaid@x.y.z releases found") if candidates.empty?
+
+          latest = candidates.max_by { |release| release["version"].split(".").map(&:to_i) }
+          latest_version = latest.fetch("version")
+          update_available = (latest_version.split(".").map(&:to_i) <=> current_version.split(".").map(&:to_i)).positive?
+
+          File.open(ENV.fetch("GITHUB_OUTPUT"), "a") do |output|
+            output.puts("current_version=#{current_version}")
+            output.puts("latest_version=#{latest_version}")
+            output.puts("latest_tag=#{latest.fetch("tag_name")}")
+            output.puts("latest_url=#{latest.fetch("html_url")}")
+            output.puts("update_available=#{update_available}")
+          end
+
+          File.open(ENV.fetch("GITHUB_STEP_SUMMARY"), "a") do |summary|
+            summary.puts("### Mermaid Version Watch")
+            summary.puts
+            summary.puts("- Bundled runtime: `#{current_version}`")
+            summary.puts("- Latest upstream: [`#{latest.fetch("tag_name")}`](#{latest.fetch("html_url")})")
+            summary.puts("- Update available: `#{update_available}`")
+          end
+          RUBY
+
+      - name: Ensure sync label
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          gh label create upstream-mermaid \
+            --description "Tracks bundled Mermaid runtime updates" \
+            --color ff3670 \
+            --force \
+            || true
+
+      - name: Create or update sync issue
+        if: ${{ steps.mermaid.outputs.update_available == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CURRENT_VERSION: ${{ steps.mermaid.outputs.current_version }}
+          LATEST_VERSION: ${{ steps.mermaid.outputs.latest_version }}
+          LATEST_TAG: ${{ steps.mermaid.outputs.latest_tag }}
+          LATEST_URL: ${{ steps.mermaid.outputs.latest_url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          title="chore: sync Mermaid runtime to ${LATEST_VERSION}"
+          body="$(mktemp)"
+          cat > "$body" <<BODY
+          ## Summary
+          A newer stable Mermaid runtime is available.
+
+          - Bundled version: \`${CURRENT_VERSION}\`
+          - Latest upstream version: [\`${LATEST_TAG}\`](${LATEST_URL})
+          - Bundled file: \`src/main/resources/mermaid/mermaid.min.js\`
+
+          ## Checklist
+          - [ ] Update the bundled Mermaid runtime.
+          - [ ] Update the Mermaid version badges in \`README.md\` and \`README_zh.md\`.
+          - [ ] Run \`./gradlew check\`.
+          BODY
+
+          issue_number="$(
+            gh issue list \
+              --state open \
+              --label upstream-mermaid \
+              --json number \
+              --jq '.[0].number // ""'
+          )"
+
+          if [[ -n "$issue_number" ]]; then
+            gh issue edit "$issue_number" \
+              --title "$title" \
+              --body-file "$body"
+          else
+            gh issue create \
+              --title "$title" \
+              --body-file "$body" \
+              --label upstream-mermaid
+          fi
+
+      - name: Close resolved sync issue
+        if: ${{ steps.mermaid.outputs.update_available == 'false' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CURRENT_VERSION: ${{ steps.mermaid.outputs.current_version }}
+          LATEST_VERSION: ${{ steps.mermaid.outputs.latest_version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          issue_number="$(
+            gh issue list \
+              --state open \
+              --label upstream-mermaid \
+              --json number \
+              --jq '.[0].number // ""'
+          )"
+
+          if [[ -n "$issue_number" ]]; then
+            gh issue comment "$issue_number" \
+              --body "Bundled Mermaid runtime ${CURRENT_VERSION} is up to date with upstream ${LATEST_VERSION}. Closing this reminder."
+            gh issue close "$issue_number" --reason completed
+          fi

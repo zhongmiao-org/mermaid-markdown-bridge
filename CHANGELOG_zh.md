@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### 🔧 CI/CD
+- 新增 Mermaid runtime 定时发布监控，当上游 Mermaid 出现新的稳定版本时创建或更新提醒 issue。
+
 ## [1.1.0]
 
 ### 🔄 变更
