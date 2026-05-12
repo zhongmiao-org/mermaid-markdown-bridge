@@ -96,7 +96,7 @@ jobs:
           end
           RUBY
 
-      - name: Ensure sync label
+      - name: Ensure sync labels
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
@@ -106,6 +106,21 @@ jobs:
           gh label create upstream-mermaid \
             --description "Tracks bundled Mermaid runtime updates" \
             --color ff3670 \
+            --force \
+            || true
+          gh label create dependencies \
+            --description "Pull requests that update a dependency file" \
+            --color 0366d6 \
+            --force \
+            || true
+          gh label create github_actions \
+            --description "Pull requests that update GitHub Actions code" \
+            --color 000000 \
+            --force \
+            || true
+          gh label create automated-pr \
+            --description "Pull requests opened by repository automation" \
+            --color ededed \
             --force \
             || true
 
@@ -195,8 +210,8 @@ jobs:
           set -euo pipefail
 
           branch="ci/sync-mermaid-runtime-${LATEST_VERSION}"
-          git config user.email "action@github.com"
-          git config user.name "GitHub Action"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git remote set-url origin "https://x-access-token:${MERMAID_SYNC_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git fetch origin main
           git switch -C "$branch" origin/main
@@ -230,9 +245,14 @@ jobs:
             echo
             echo "Release notes:"
             cat "$RELEASE_BODY_PATH"
+            echo
+            echo "Co-authored-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+            echo "Co-authored-by: give me a 98K <240642031+inhuman-0@users.noreply.github.com>"
           } > "$commit_message"
 
-          git commit -F "$commit_message"
+          git commit \
+            --author="ark-65 <25193106+ark-65@users.noreply.github.com>" \
+            -F "$commit_message"
           git push --force-with-lease --set-upstream origin "$branch"
 
           {
@@ -269,6 +289,12 @@ jobs:
           ## Upstream
           [${LATEST_TAG}](${LATEST_URL})
 
+          ## Labels
+          - \`upstream-mermaid\`
+          - \`dependencies\`
+          - \`github_actions\`
+          - \`automated-pr\`
+
           ## Validation
           - GitHub CI will run Gradle checks and example Mermaid preview rendering.
 
@@ -298,6 +324,12 @@ jobs:
               --head "$SYNC_BRANCH")"
             pr_number="${pr_url##*/}"
           fi
+
+          gh pr edit "$pr_number" \
+            --add-label upstream-mermaid \
+            --add-label dependencies \
+            --add-label github_actions \
+            --add-label automated-pr
 
           {
             echo "pr_number=$pr_number"

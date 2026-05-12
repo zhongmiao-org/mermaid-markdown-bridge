@@ -7,6 +7,7 @@
 ## [Unreleased]
 
 ### 🔧 CI/CD
+- Added upstream release links, automated PR labels, and co-author metadata to Mermaid runtime sync automation.
 - Added automatic Mermaid runtime sync pull requests linked to the upstream Mermaid reminder issue through GitHub Development.
 - Added headless browser rendering checks for Mermaid diagrams in `examples/demo.md`.
 - Added a scheduled Mermaid runtime release watch that opens or updates a reminder issue when a newer stable upstream Mermaid version is available.
