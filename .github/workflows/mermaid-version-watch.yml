@@ -3,11 +3,12 @@ name: Mermaid Version Watch
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 2 * * *"
+    - cron: "17 */6 * * *"
 
 permissions:
-  contents: read
+  contents: write
   issues: write
+  pull-requests: write
 
 concurrency:
   group: ${{ github.workflow }}
@@ -20,6 +21,13 @@ jobs:
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
 
       - name: Compare bundled runtime with upstream
         id: mermaid
@@ -67,12 +75,15 @@ jobs:
           latest = candidates.max_by { |release| release["version"].split(".").map(&:to_i) }
           latest_version = latest.fetch("version")
           update_available = (latest_version.split(".").map(&:to_i) <=> current_version.split(".").map(&:to_i)).positive?
+          release_body_path = File.join(ENV.fetch("RUNNER_TEMP"), "mermaid-release-body.md")
+          File.write(release_body_path, latest["body"].to_s)
 
           File.open(ENV.fetch("GITHUB_OUTPUT"), "a") do |output|
             output.puts("current_version=#{current_version}")
             output.puts("latest_version=#{latest_version}")
             output.puts("latest_tag=#{latest.fetch("tag_name")}")
             output.puts("latest_url=#{latest.fetch("html_url")}")
+            output.puts("release_body_path=#{release_body_path}")
             output.puts("update_available=#{update_available}")
           end
 
@@ -99,6 +110,7 @@ jobs:
             || true
 
       - name: Create or update sync issue
+        id: issue
         if: ${{ steps.mermaid.outputs.update_available == 'true' }}
         env:
           GH_TOKEN: ${{ github.token }}
@@ -120,10 +132,13 @@ jobs:
           - Latest upstream version: [\`${LATEST_TAG}\`](${LATEST_URL})
           - Bundled file: \`src/main/resources/mermaid/mermaid.min.js\`
 
+          ## Automation
+          This workflow will open or update a linked sync pull request.
+
           ## Checklist
           - [ ] Update the bundled Mermaid runtime.
           - [ ] Update the Mermaid version badges in \`README.md\` and \`README_zh.md\`.
-          - [ ] Run \`./gradlew check\`.
+          - [ ] Confirm example Mermaid diagrams render without preview errors.
           BODY
 
           issue_number="$(
@@ -138,12 +153,190 @@ jobs:
             gh issue edit "$issue_number" \
               --title "$title" \
               --body-file "$body"
+            issue_url="$(gh issue view "$issue_number" --json url --jq '.url')"
           else
-            gh issue create \
+            issue_url="$(gh issue create \
               --title "$title" \
               --body-file "$body" \
-              --label upstream-mermaid
+              --label upstream-mermaid)"
+            issue_number="${issue_url##*/}"
           fi
+
+          {
+            echo "issue_number=$issue_number"
+            echo "issue_url=$issue_url"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Require sync token
+        if: ${{ steps.mermaid.outputs.update_available == 'true' }}
+        env:
+          MERMAID_SYNC_TOKEN: ${{ secrets.MERMAID_SYNC_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${MERMAID_SYNC_TOKEN}" ]]; then
+            echo "::error::MERMAID_SYNC_TOKEN is required to push the sync branch and create a PR that triggers CI."
+            exit 1
+          fi
+
+      - name: Prepare sync branch
+        id: sync
+        if: ${{ steps.mermaid.outputs.update_available == 'true' }}
+        env:
+          MERMAID_SYNC_TOKEN: ${{ secrets.MERMAID_SYNC_TOKEN }}
+          LATEST_VERSION: ${{ steps.mermaid.outputs.latest_version }}
+          LATEST_TAG: ${{ steps.mermaid.outputs.latest_tag }}
+          LATEST_URL: ${{ steps.mermaid.outputs.latest_url }}
+          RELEASE_BODY_PATH: ${{ steps.mermaid.outputs.release_body_path }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          branch="ci/sync-mermaid-runtime-${LATEST_VERSION}"
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git remote set-url origin "https://x-access-token:${MERMAID_SYNC_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch origin main
+          git switch -C "$branch" origin/main
+
+          package_dir="$(mktemp -d)"
+          tarball_name="$(npm pack "mermaid@${LATEST_VERSION}" --pack-destination "$package_dir" --silent)"
+          tar -xzf "$package_dir/$tarball_name" -C "$package_dir"
+          cp "$package_dir/package/dist/mermaid.min.js" src/main/resources/mermaid/mermaid.min.js
+
+          ruby .github/scripts/update-mermaid-runtime.rb "$LATEST_VERSION" "$LATEST_TAG" "$LATEST_URL"
+
+          git add \
+            src/main/resources/mermaid/mermaid.min.js \
+            README.md \
+            README_zh.md \
+            CHANGELOG.md \
+            CHANGELOG_zh.md
+
+          if git diff --cached --quiet; then
+            echo "No runtime sync changes detected."
+            echo "changes=false" >> "$GITHUB_OUTPUT"
+            echo "branch=$branch" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          commit_message="$(mktemp)"
+          {
+            echo "chore: sync Mermaid runtime to ${LATEST_VERSION}"
+            echo
+            echo "Upstream release: ${LATEST_URL}"
+            echo
+            echo "Release notes:"
+            cat "$RELEASE_BODY_PATH"
+          } > "$commit_message"
+
+          git commit -F "$commit_message"
+          git push --force-with-lease --set-upstream origin "$branch"
+
+          {
+            echo "changes=true"
+            echo "branch=$branch"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create or update sync pull request
+        id: pull_request
+        if: ${{ steps.sync.outputs.changes == 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.MERMAID_SYNC_TOKEN }}
+          CURRENT_VERSION: ${{ steps.mermaid.outputs.current_version }}
+          LATEST_VERSION: ${{ steps.mermaid.outputs.latest_version }}
+          LATEST_TAG: ${{ steps.mermaid.outputs.latest_tag }}
+          LATEST_URL: ${{ steps.mermaid.outputs.latest_url }}
+          RELEASE_BODY_PATH: ${{ steps.mermaid.outputs.release_body_path }}
+          ISSUE_NUMBER: ${{ steps.issue.outputs.issue_number }}
+          SYNC_BRANCH: ${{ steps.sync.outputs.branch }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          title="chore: sync Mermaid runtime to ${LATEST_VERSION}"
+          body="$(mktemp)"
+          cat > "$body" <<BODY
+          Closes #${ISSUE_NUMBER}
+
+          ## Summary
+          - Update the bundled Mermaid runtime from \`${CURRENT_VERSION}\` to \`${LATEST_VERSION}\`.
+          - Update README badges and bilingual changelogs for the bundled runtime.
+          - Keep the sync issue associated through GitHub Development.
+
+          ## Upstream
+          [${LATEST_TAG}](${LATEST_URL})
+
+          ## Validation
+          - GitHub CI will run Gradle checks and example Mermaid preview rendering.
+
+          ## Upstream Release Notes
+          BODY
+          cat "$RELEASE_BODY_PATH" >> "$body"
+
+          pr_number="$(
+            gh pr list \
+              --head "$SYNC_BRANCH" \
+              --base main \
+              --state open \
+              --json number \
+              --jq '.[0].number // ""'
+          )"
+
+          if [[ -n "$pr_number" ]]; then
+            gh pr edit "$pr_number" \
+              --title "$title" \
+              --body-file "$body"
+            pr_url="$(gh pr view "$pr_number" --json url --jq '.url')"
+          else
+            pr_url="$(gh pr create \
+              --title "$title" \
+              --body-file "$body" \
+              --base main \
+              --head "$SYNC_BRANCH")"
+            pr_number="${pr_url##*/}"
+          fi
+
+          {
+            echo "pr_number=$pr_number"
+            echo "pr_url=$pr_url"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Link issue to sync pull request
+        if: ${{ steps.pull_request.outputs.pr_url != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CURRENT_VERSION: ${{ steps.mermaid.outputs.current_version }}
+          LATEST_VERSION: ${{ steps.mermaid.outputs.latest_version }}
+          LATEST_TAG: ${{ steps.mermaid.outputs.latest_tag }}
+          LATEST_URL: ${{ steps.mermaid.outputs.latest_url }}
+          ISSUE_NUMBER: ${{ steps.issue.outputs.issue_number }}
+          PR_URL: ${{ steps.pull_request.outputs.pr_url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          body="$(mktemp)"
+          cat > "$body" <<BODY
+          ## Summary
+          A newer stable Mermaid runtime is available.
+
+          - Bundled version: \`${CURRENT_VERSION}\`
+          - Latest upstream version: [\`${LATEST_TAG}\`](${LATEST_URL})
+          - Bundled file: \`src/main/resources/mermaid/mermaid.min.js\`
+          - Sync PR: ${PR_URL}
+
+          ## Automation
+          The sync PR includes \`Closes #${ISSUE_NUMBER}\`, so GitHub Development links this issue to the PR and closes it after merge.
+
+          ## Checklist
+          - [ ] Update the bundled Mermaid runtime.
+          - [ ] Update the Mermaid version badges in \`README.md\` and \`README_zh.md\`.
+          - [ ] Confirm example Mermaid diagrams render without preview errors.
+          BODY
+
+          gh issue edit "$ISSUE_NUMBER" --body-file "$body"
 
       - name: Close resolved sync issue
         if: ${{ steps.mermaid.outputs.update_available == 'false' }}

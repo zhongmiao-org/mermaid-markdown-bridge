@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "scripts": {
+    "test:examples": "playwright test tests/mermaid-example-render.spec.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
+  }
+}
