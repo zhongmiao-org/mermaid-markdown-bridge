@@ -138,6 +138,7 @@ jobs:
           ## Checklist
           - [ ] Update the bundled Mermaid runtime.
           - [ ] Update the Mermaid version badges in \`README.md\` and \`README_zh.md\`.
+          - [ ] Update \`CHANGELOG.md\` and \`CHANGELOG_zh.md\`.
           - [ ] Confirm example Mermaid diagrams render without preview errors.
           BODY
 
@@ -333,6 +334,7 @@ jobs:
           ## Checklist
           - [ ] Update the bundled Mermaid runtime.
           - [ ] Update the Mermaid version badges in \`README.md\` and \`README_zh.md\`.
+          - [ ] Update \`CHANGELOG.md\` and \`CHANGELOG_zh.md\`.
           - [ ] Confirm example Mermaid diagrams render without preview errors.
           BODY
 
