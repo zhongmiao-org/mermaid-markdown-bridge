@@ -91,8 +91,8 @@ jobs:
           set -euo pipefail
 
           git fetch --tags origin
-          git config user.email "action@github.com"
-          git config user.name "GitHub Action"
+          git config user.name "actions-user"
+          git config user.email "65916846+actions-user@users.noreply.github.com"
 
           if git rev-parse "$TAG" >/dev/null 2>&1; then
             EXISTING="$(git rev-parse "$TAG^{commit}")"
