@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### 🔄 变更
+- 将内置 Mermaid runtime 更新到 [mermaid@11.15.0](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4011.15.0)。
+
 ### 🔧 CI/CD
 - 在 CI 中强制双语 changelog 只能更新 Unreleased，并检查重复小节。
 - 为 Mermaid runtime 同步自动化新增上游 release 链接、自动 PR labels 和 co-author 元数据。
