@@ -7,6 +7,7 @@
 ## [Unreleased]
 
 ### 🔧 CI/CD
+- 为 Mermaid runtime 同步自动化新增上游 release 链接、自动 PR labels 和 co-author 元数据。
 - 新增 Mermaid runtime 自动同步 PR，并通过 GitHub Development 与上游 Mermaid 提醒 issue 关联。
 - 新增针对 `examples/demo.md` 中 Mermaid 图表的 headless browser 渲染检查。
 - 新增 Mermaid runtime 定时发布监控，当上游 Mermaid 出现新的稳定版本时创建或更新提醒 issue。

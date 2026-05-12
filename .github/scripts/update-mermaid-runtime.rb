@@ -43,11 +43,11 @@ update_readme_badge("README_zh.md", version, release_url)
 ensure_changelog_entry(
   "CHANGELOG.md",
   "### 🔄 Changed",
-  "- Updated the bundled Mermaid runtime to `#{tag}`."
+  "- Updated the bundled Mermaid runtime to [#{tag}](#{release_url})."
 )
 
 ensure_changelog_entry(
   "CHANGELOG_zh.md",
   "### 🔄 变更",
-  "- 将内置 Mermaid runtime 更新到 `#{tag}`。"
+  "- 将内置 Mermaid runtime 更新到 [#{tag}](#{release_url})。"
 )
