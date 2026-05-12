@@ -29,6 +29,7 @@
 [![Marketplace downloads](https://img.shields.io/jetbrains/plugin/d/31518?label=Downloads&logo=jetbrains)](https://plugins.jetbrains.com/plugin/31518-mermaid-markdown-bridge)
 [![GitHub issues](https://img.shields.io/github/issues/zhongmiao-org/mermaid-markdown-bridge)](https://github.com/zhongmiao-org/mermaid-markdown-bridge/issues)
 [![License](https://img.shields.io/github/license/zhongmiao-org/mermaid-markdown-bridge)](./LICENSE)
+[![Mermaid](https://img.shields.io/badge/Mermaid-11.14.0-ff3670)](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4011.14.0)
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.3.21-7F52FF?logo=kotlin&logoColor=white)
 ![JetBrains Platform](https://img.shields.io/badge/JetBrains%20Platform-2023.1%2B-000000?logo=jetbrains&logoColor=white)
 
