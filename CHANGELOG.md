@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### 🔄 Changed
+- Updated the bundled Mermaid runtime to [mermaid@11.15.0](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4011.15.0).
+
 ### 🔧 CI/CD
 - Enforced Unreleased-only bilingual changelog updates and duplicate section checks in CI.
 - Added upstream release links, automated PR labels, and co-author metadata to Mermaid runtime sync automation.
