@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### 🔧 CI/CD
+- Added a scheduled Mermaid runtime release watch that opens or updates a reminder issue when a newer stable upstream Mermaid version is available.
+
 ## [1.1.0] - 2026-04-30
 
 ### 🔄 Changed
