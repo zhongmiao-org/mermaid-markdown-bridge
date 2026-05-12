@@ -15,11 +15,14 @@ jobs:
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Check bilingual changelog updates
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
           HEAD_REF: ${{ github.head_ref }}
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
           LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
@@ -52,7 +55,9 @@ jobs:
             exit 0
           fi
 
-          changed_files="$(gh pr view "$PR_NUMBER" --json files --jq '.files[].path')"
+          git fetch --no-tags --depth=1 origin "$BASE_REF:refs/remotes/origin/$BASE_REF"
+
+          changed_files="$(git diff --name-only "origin/$BASE_REF"...HEAD)"
           echo "Changed files:"
           echo "$changed_files"
 
@@ -66,4 +71,54 @@ jobs:
             exit 1
           fi
 
-          echo "Bilingual changelog updates found."
+          ruby <<'RUBY'
+          require "open3"
+
+          base_ref = ENV.fetch("BASE_REF")
+          base_revision = "origin/#{base_ref}"
+          changelogs = ["CHANGELOG.md", "CHANGELOG_zh.md"].freeze
+
+          def read_from_git(revision, path)
+            content, status = Open3.capture2("git", "show", "#{revision}:#{path}")
+            abort("Unable to read #{path} from #{revision}") unless status.success?
+
+            content
+          end
+
+          def split_changelog(content, path)
+            match = content.match(/\A(?<prefix>.*?^## \[Unreleased\]\s*$\n)(?<unreleased>.*?)(?<released>^## \[.*|\z)/m)
+            abort("Missing Unreleased section in #{path}") unless match
+
+            [match[:unreleased].strip, match[:released].strip]
+          end
+
+          def assert_no_duplicate_sections(content, path)
+            content.scan(/^## \[[^\]]+\][^\n]*\n.*?(?=^## \[|\z)/m).each do |section|
+              version_heading = section.lines.first.strip
+              headings = section.scan(/^### .+$/)
+              duplicates = headings.group_by(&:itself).select { |_heading, items| items.length > 1 }.keys
+              next if duplicates.empty?
+
+              abort("#{path} #{version_heading} contains duplicate changelog section(s): #{duplicates.join(", ")}")
+            end
+          end
+
+          changelogs.each do |path|
+            base_content = read_from_git(base_revision, path)
+            head_content = File.read(path)
+            base_unreleased, base_released = split_changelog(base_content, path)
+            head_unreleased, head_released = split_changelog(head_content, path)
+
+            if base_unreleased == head_unreleased
+              abort("#{path} must update the Unreleased section, not only released changelog sections")
+            end
+
+            if base_released != head_released
+              abort("#{path} must not modify released changelog sections in regular PRs")
+            end
+
+            assert_no_duplicate_sections(head_content, path)
+          end
+          RUBY
+
+          echo "Bilingual Unreleased changelog updates found."

@@ -7,16 +7,13 @@
 ## [Unreleased]
 
 ### 🔧 CI/CD
+- Enforced Unreleased-only bilingual changelog updates and duplicate section checks in CI.
 - Added upstream release links, automated PR labels, and co-author metadata to Mermaid runtime sync automation.
 - Added automatic Mermaid runtime sync pull requests linked to the upstream Mermaid reminder issue through GitHub Development.
 - Added headless browser rendering checks for Mermaid diagrams in `examples/demo.md`.
 - Added a scheduled Mermaid runtime release watch that opens or updates a reminder issue when a newer stable upstream Mermaid version is available.
 
 ## [1.1.0] - 2026-04-30
-
-### 🔄 Changed
-- Declared JetBrains IDE compatibility from IntelliJ Platform `2023.1` onward and lowered the build baseline to IDEA Community `2023.1.7`.
-- Expanded plugin verification coverage across JetBrains IntelliJ-based IDE product families supported by the Gradle verifier at their 2023+ compatibility lower bounds.
 
 ### 🔄 Changed
 - Declared JetBrains IDE compatibility from IntelliJ Platform `2023.1` onward and lowered the build baseline to IDEA Community `2023.1.7`.
@@ -32,23 +29,7 @@
 - Expanded the demo Markdown file with Mermaid example diagrams and upstream Mermaid source attribution.
 - Updated plugin description metadata to align with the README-based Marketplace description.
 
-### ✨ Added
-- Added preview-only Mermaid diagram zoom, pan, reset, and drag controls without changing Markdown editor or preview page theming.
-
-### 📚 Documentation
-- Polished the English and Chinese README files with clearer Marketplace-facing documentation, preview-only scope, GitHub-like rendering expectations, Mermaid third-party runtime notes, updated brand asset placement, and a theme-aware Markdown logo variant.
-- Expanded the demo Markdown file with Mermaid example diagrams and upstream Mermaid source attribution.
-- Updated plugin description metadata to align with the README-based Marketplace description.
-
 ## [0.1.2] - 2026-04-29
-
-### 🔄 Changed
-- Adjusted plugin icon SVG metadata to the JetBrains Marketplace required 40 px by 40 px size.
-- Added vendor contact metadata and third-party notices for the bundled Mermaid runtime.
-- Replaced deprecated theme detection API usage reported by IntelliJ Plugin Verifier.
-
-### 📚 Documentation
-- Documented Marketplace discovery limits for Mermaid fenced code blocks in Markdown and clarified that the plugin does not register a Markdown file type for installation recommendations.
 
 ### 🔄 Changed
 - Adjusted plugin icon SVG metadata to the JetBrains Marketplace required 40 px by 40 px size.
