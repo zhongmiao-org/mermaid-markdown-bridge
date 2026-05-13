@@ -114,7 +114,7 @@ jobs:
             abort("#{path} already contains #{heading}") if content.include?(heading)
 
             replacement = "## [Unreleased]\n\n#{heading}\n\n#{notes}\n"
-            changed = content.sub(/^## \[Unreleased\]\s*$/, replacement)
+            changed = content.sub(/^## \[Unreleased\]\s*$\n.*?(?=^## \[|\z)/m, replacement)
             abort("Missing Unreleased section in #{path}") if changed == content
             File.write(path, changed)
           end
