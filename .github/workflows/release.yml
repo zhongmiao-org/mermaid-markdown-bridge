@@ -65,13 +65,30 @@ jobs:
 
           version = ARGV.fetch(0)
           output = ARGV.fetch(1)
+          excluded_headings = ["### 🔧 CI/CD", "### 🧪 Tests", "### 📦 Build"]
+
+          def public_release_notes(markdown, excluded_headings)
+            skip_section = false
+            markdown.each_line.each_with_object([]) do |line, lines|
+              stripped = line.strip
+              if stripped.start_with?("### ")
+                skip_section = excluded_headings.include?(stripped)
+                next if skip_section
+              elsif stripped.start_with?("## ")
+                skip_section = false
+              end
+
+              lines << line unless skip_section
+            end.join.strip
+          end
+
           changelog = File.read("CHANGELOG.md")
           pattern = /^## \[#{Regexp.escape(version)}\](?: - \d{4}-\d{2}-\d{2})?\s*$\n(?<body>.*?)(?=^## \[|\z)/m
           match = changelog.match(pattern)
           abort("Missing CHANGELOG.md section for #{version}") unless match
 
-          body = match[:body].strip
-          abort("Empty CHANGELOG.md section for #{version}") if body.empty?
+          body = public_release_notes(match[:body], excluded_headings)
+          abort("Empty public release notes for #{version} after filtering internal changelog sections") if body.empty?
 
           FileUtils.mkdir_p(File.dirname(output))
           File.write(output, body + "\n")

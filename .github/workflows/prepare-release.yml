@@ -74,6 +74,7 @@ jobs:
           date = ENV.fetch("DATE")
 
           EMOJI_HEADINGS = ["### ✨", "### 🔄", "### 🐛", "### 🔧", "### 📚", "### 🧪", "### 📦", "### 🧱"].freeze
+          PUBLIC_RELEASE_NOTE_EXCLUDED_HEADINGS = ["### 🔧 CI/CD", "### 🧪 Tests", "### 📦 Build"].freeze
 
           def extract_unreleased(path)
             content = File.read(path)
@@ -87,6 +88,21 @@ jobs:
             end
 
             body
+          end
+
+          def public_release_notes(markdown)
+            skip_section = false
+            markdown.each_line.each_with_object([]) do |line, lines|
+              stripped = line.strip
+              if stripped.start_with?("### ")
+                skip_section = PUBLIC_RELEASE_NOTE_EXCLUDED_HEADINGS.include?(stripped)
+                next if skip_section
+              elsif stripped.start_with?("## ")
+                skip_section = false
+              end
+
+              lines << line unless skip_section
+            end.join.strip
           end
 
           gradle = File.read("gradle.properties")
@@ -105,6 +121,8 @@ jobs:
 
           notes_en = extract_unreleased("CHANGELOG.md")
           notes_zh = extract_unreleased("CHANGELOG_zh.md")
+          public_notes_en = public_release_notes(notes_en)
+          abort("Empty public release notes after filtering internal changelog sections") if public_notes_en.empty?
 
           archive_unreleased("CHANGELOG.md", "## [#{version}] - #{date}", notes_en)
           archive_unreleased("CHANGELOG_zh.md", "## [#{version}]", notes_zh)
@@ -114,7 +132,7 @@ jobs:
           Prepare release `v#{version}`.
 
           ## Release Notes
-          #{notes_en}
+          #{public_notes_en}
           BODY
 
           File.write("build/release-pr-body.md", body)
