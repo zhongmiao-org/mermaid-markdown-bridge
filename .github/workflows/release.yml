@@ -65,7 +65,7 @@ jobs:
 
           version = ARGV.fetch(0)
           output = ARGV.fetch(1)
-          excluded_headings = ["### 🔧 CI/CD"]
+          excluded_headings = ["### 🔧 CI/CD", "### 🧪 Tests", "### 📦 Build"]
 
           def public_release_notes(markdown, excluded_headings)
             skip_section = false

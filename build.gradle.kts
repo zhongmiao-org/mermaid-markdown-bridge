@@ -46,7 +46,11 @@ dependencies {
     }
 }
 
-val publicReleaseNoteExcludedHeadings = setOf("### 🔧 CI/CD")
+val publicReleaseNoteExcludedHeadings = setOf(
+    "### 🔧 CI/CD",
+    "### 🧪 Tests",
+    "### 📦 Build",
+)
 
 fun publicReleaseNotes(markdown: String): String {
     var skipSection = false

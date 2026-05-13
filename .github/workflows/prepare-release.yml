@@ -74,7 +74,7 @@ jobs:
           date = ENV.fetch("DATE")
 
           EMOJI_HEADINGS = ["### ✨", "### 🔄", "### 🐛", "### 🔧", "### 📚", "### 🧪", "### 📦", "### 🧱"].freeze
-          PUBLIC_RELEASE_NOTE_EXCLUDED_HEADINGS = ["### 🔧 CI/CD"].freeze
+          PUBLIC_RELEASE_NOTE_EXCLUDED_HEADINGS = ["### 🔧 CI/CD", "### 🧪 Tests", "### 📦 Build"].freeze
 
           def extract_unreleased(path)
             content = File.read(path)
