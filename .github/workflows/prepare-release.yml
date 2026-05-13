@@ -63,8 +63,8 @@ jobs:
           end
           RUBY
 
-          git config user.email "action@github.com"
-          git config user.name "GitHub Action"
+          git config user.name "actions-user"
+          git config user.email "65916846+actions-user@users.noreply.github.com"
           git fetch origin main "$BRANCH" || true
           git switch -C "$BRANCH" origin/main
           mkdir -p build
@@ -120,12 +120,20 @@ jobs:
           File.write("build/release-pr-body.md", body)
           RUBY
 
+          {
+            echo "chore: release v$VERSION"
+            echo
+            echo "Co-authored-by: actions-user <65916846+actions-user@users.noreply.github.com>"
+          } > build/release-commit-message.txt
+
           git add gradle.properties CHANGELOG.md CHANGELOG_zh.md
 
           if git diff --cached --quiet; then
             echo "No release changes detected."
           else
-            git commit -m "chore: release v$VERSION"
+            git commit \
+              --author="ark-65 <25193106+ark-65@users.noreply.github.com>" \
+              -F build/release-commit-message.txt
           fi
 
           git push --force-with-lease --set-upstream origin "$BRANCH"

@@ -10,6 +10,7 @@
 - 将内置 Mermaid runtime 更新到 [mermaid@11.15.0](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4011.15.0)。
 
 ### 🔧 CI/CD
+- 为 release 自动化提交和 tag 配置可归属的 GitHub 作者与协作者元数据。
 - 在 CI 中强制双语 changelog 只能更新 Unreleased，并检查重复小节。
 - 为 Mermaid runtime 同步自动化新增上游 release 链接、自动 PR labels 和 co-author 元数据。
 - 新增 Mermaid runtime 自动同步 PR，并通过 GitHub Development 与上游 Mermaid 提醒 issue 关联。
