@@ -46,6 +46,29 @@ dependencies {
     }
 }
 
+val publicReleaseNoteExcludedHeadings = setOf("### 🔧 CI/CD")
+
+fun publicReleaseNotes(markdown: String): String {
+    var skipSection = false
+    return markdown
+        .lineSequence()
+        .filter { line ->
+            when {
+                line.startsWith("### ") -> {
+                    skipSection = line.trim() in publicReleaseNoteExcludedHeadings
+                    !skipSection
+                }
+                line.startsWith("## ") -> {
+                    skipSection = false
+                    true
+                }
+                else -> !skipSection
+            }
+        }
+        .joinToString("\n")
+        .trim()
+}
+
 // Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html
 intellijPlatform {
     pluginConfiguration {
@@ -71,12 +94,13 @@ intellijPlatform {
         // Get the latest available change notes from the changelog file
         changeNotes = version.map { pluginVersion ->
             with(changelog) {
-                renderItem(
+                val releaseNotes = renderItem(
                     (getOrNull(pluginVersion) ?: getUnreleased())
                         .withHeader(false)
                         .withEmptySections(false),
-                    Changelog.OutputType.HTML,
+                    Changelog.OutputType.MARKDOWN,
                 )
+                markdownToHTML(publicReleaseNotes(releaseNotes))
             }
         }
     }
