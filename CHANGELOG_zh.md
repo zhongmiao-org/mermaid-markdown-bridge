@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+## [1.2.0]
+
 ### 🔄 变更
 - 将内置 Mermaid runtime 更新到 [mermaid@11.15.0](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4011.15.0)。
 
@@ -18,7 +20,6 @@
 - 新增 Mermaid runtime 自动同步 PR，并通过 GitHub Development 与上游 Mermaid 提醒 issue 关联。
 - 新增针对 `examples/demo.md` 中 Mermaid 图表的 headless browser 渲染检查。
 - 新增 Mermaid runtime 定时发布监控，当上游 Mermaid 出现新的稳定版本时创建或更新提醒 issue。
-
 ## [1.1.0]
 
 ### 🔄 变更
