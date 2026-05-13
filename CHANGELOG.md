@@ -10,6 +10,7 @@
 - Updated the bundled Mermaid runtime to [mermaid@11.15.0](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4011.15.0).
 
 ### 🔧 CI/CD
+- Fixed release preparation so archiving Unreleased changelog entries removes them from the Unreleased section.
 - Filtered internal maintenance entries out of public release notes and JetBrains Marketplace change notes.
 - Configured release automation commits and tags with GitHub-attributed author and collaborator metadata.
 - Enforced Unreleased-only bilingual changelog updates and duplicate section checks in CI.
