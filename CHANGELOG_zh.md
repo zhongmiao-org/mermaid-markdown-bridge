@@ -6,6 +6,20 @@
 
 ## [Unreleased]
 
+## [1.2.0]
+
+### 🔄 变更
+- 将内置 Mermaid runtime 更新到 [mermaid@11.15.0](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4011.15.0)。
+
+### 🔧 CI/CD
+- 从公开 release notes 和 JetBrains Marketplace change notes 中过滤内部维护类条目。
+- 为 release 自动化提交和 tag 配置可归属的 GitHub 作者与协作者元数据。
+- 在 CI 中强制双语 changelog 只能更新 Unreleased，并检查重复小节。
+- 为 Mermaid runtime 同步自动化新增上游 release 链接、自动 PR labels 和 co-author 元数据。
+- 新增 Mermaid runtime 自动同步 PR，并通过 GitHub Development 与上游 Mermaid 提醒 issue 关联。
+- 新增针对 `examples/demo.md` 中 Mermaid 图表的 headless browser 渲染检查。
+- 新增 Mermaid runtime 定时发布监控，当上游 Mermaid 出现新的稳定版本时创建或更新提醒 issue。
+
 ### 🔄 变更
 - 将内置 Mermaid runtime 更新到 [mermaid@11.15.0](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4011.15.0)。
 

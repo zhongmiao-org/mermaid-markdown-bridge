@@ -6,6 +6,20 @@
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-05-13
+
+### 🔄 Changed
+- Updated the bundled Mermaid runtime to [mermaid@11.15.0](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4011.15.0).
+
+### 🔧 CI/CD
+- Filtered internal maintenance entries out of public release notes and JetBrains Marketplace change notes.
+- Configured release automation commits and tags with GitHub-attributed author and collaborator metadata.
+- Enforced Unreleased-only bilingual changelog updates and duplicate section checks in CI.
+- Added upstream release links, automated PR labels, and co-author metadata to Mermaid runtime sync automation.
+- Added automatic Mermaid runtime sync pull requests linked to the upstream Mermaid reminder issue through GitHub Development.
+- Added headless browser rendering checks for Mermaid diagrams in `examples/demo.md`.
+- Added a scheduled Mermaid runtime release watch that opens or updates a reminder issue when a newer stable upstream Mermaid version is available.
+
 ### 🔄 Changed
 - Updated the bundled Mermaid runtime to [mermaid@11.15.0](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4011.15.0).
 
