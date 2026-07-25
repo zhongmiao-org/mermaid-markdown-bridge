@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### 🔄 变更
+- 将最低支持的 JetBrains IDE 基线提升至 IntelliJ Platform `2023.3`。
+
 ## [1.3.0]
 
 ### 🔄 变更

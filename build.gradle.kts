@@ -2,13 +2,12 @@ import org.gradle.api.GradleException
 import org.gradle.kotlin.dsl.assign
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
-import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("org.jetbrains.kotlin.jvm") version "2.4.10"
-    id("org.jetbrains.intellij.platform") version "2.17.0"
+    id("org.jetbrains.intellij.platform") version "2.18.1"
     id("org.jetbrains.changelog") version "2.5.0"
 }
 
@@ -77,7 +76,7 @@ fun publicReleaseNotes(markdown: String): String {
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "231"
+            sinceBuild = "233"
             untilBuild = provider { null }
         }
 
@@ -111,20 +110,8 @@ intellijPlatform {
 
     pluginVerification {
         ides {
-            create(IntelliJPlatformType.CLion, "2023.1.7")
-            create(IntelliJPlatformType.DataGrip, "2023.1.2")
-            create(IntelliJPlatformType.DataSpell, "2023.1.6")
-            create(IntelliJPlatformType.GoLand, "2023.1.6")
-            create(IntelliJPlatformType.IntellijIdeaCommunity, "2023.1.7")
-            create(IntelliJPlatformType.IntellijIdeaUltimate, "2023.1.7")
-            create(IntelliJPlatformType.PhpStorm, "2023.1.6")
-            create(IntelliJPlatformType.PyCharmCommunity, "2023.1.6")
-            create(IntelliJPlatformType.PyCharmProfessional, "2023.1.6")
-            create(IntelliJPlatformType.Rider, "2023.1.7") {
-                useInstaller = false
-            }
-            create(IntelliJPlatformType.RubyMine, "2023.1.7")
-            create(IntelliJPlatformType.WebStorm, "2023.1.6")
+            current()
+            recommended()
         }
     }
 }
