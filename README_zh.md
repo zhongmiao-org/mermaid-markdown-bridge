@@ -31,7 +31,7 @@
 [![License](https://img.shields.io/github/license/zhongmiao-org/mermaid-markdown-bridge)](./LICENSE)
 [![Mermaid](https://img.shields.io/badge/Mermaid-11.16.0-ff3670)](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4011.16.0)
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.3.21-7F52FF?logo=kotlin&logoColor=white)
-![JetBrains Platform](https://img.shields.io/badge/JetBrains%20Platform-2023.1%2B-000000?logo=jetbrains&logoColor=white)
+![JetBrains Platform](https://img.shields.io/badge/JetBrains%20Platform-2023.3%2B-000000?logo=jetbrains&logoColor=white)
 
 [English](./README.md) | 简体中文
 
@@ -140,7 +140,7 @@ Mermaid 只在 JetBrains Markdown Preview 的浏览器上下文中用于渲染 M
 
 ## 兼容性
 
-- 目标 IDE：基于 IntelliJ Platform `2023.1+` 的 JetBrains IDE。
+- 目标 IDE：基于 IntelliJ Platform `2023.3+` 的 JetBrains IDE。
 - 已验证 IDE：IntelliJ IDEA Community/Ultimate、WebStorm、PhpStorm、PyCharm Community/Professional、GoLand、CLion、DataGrip、DataSpell、Rider 和 RubyMine。
 - 依赖内置插件：JetBrains Markdown 插件（`org.intellij.plugins.markdown`）。
 - 预览引擎：基于 JCEF 的 Markdown Preview。

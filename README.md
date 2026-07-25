@@ -31,7 +31,7 @@
 [![License](https://img.shields.io/github/license/zhongmiao-org/mermaid-markdown-bridge)](./LICENSE)
 [![Mermaid](https://img.shields.io/badge/Mermaid-11.16.0-ff3670)](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4011.16.0)
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.3.21-7F52FF?logo=kotlin&logoColor=white)
-![JetBrains Platform](https://img.shields.io/badge/JetBrains%20Platform-2023.1%2B-000000?logo=jetbrains&logoColor=white)
+![JetBrains Platform](https://img.shields.io/badge/JetBrains%20Platform-2023.3%2B-000000?logo=jetbrains&logoColor=white)
 
 English | [简体中文](./README_zh.md)
 
@@ -151,7 +151,7 @@ Mermaid is used only inside the JetBrains Markdown Preview browser context to re
 
 ## Compatibility
 
-- Target IDEs: JetBrains IDEs based on IntelliJ Platform `2023.1+`.
+- Target IDEs: JetBrains IDEs based on IntelliJ Platform `2023.3+`.
 - Verified IDEs: IntelliJ IDEA Community/Ultimate, WebStorm, PhpStorm, PyCharm Community/Professional, GoLand, CLion, DataGrip, DataSpell, Rider, and RubyMine.
 - Required bundled plugin: JetBrains Markdown plugin (`org.intellij.plugins.markdown`).
 - Preview engine: JCEF-based Markdown Preview.
