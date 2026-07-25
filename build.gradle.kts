@@ -76,7 +76,7 @@ fun publicReleaseNotes(markdown: String): String {
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "231"
+            sinceBuild = "233"
             untilBuild = provider { null }
         }
 
