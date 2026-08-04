@@ -7,6 +7,7 @@
 ## [Unreleased]
 
 ### 🔄 Changed
+- Updated the bundled Mermaid runtime to [mermaid@11.16.1](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4011.16.1).
 - Raised the minimum supported JetBrains IDE baseline to IntelliJ Platform `2023.3`.
 
 ## [1.3.0] - 2026-06-29
