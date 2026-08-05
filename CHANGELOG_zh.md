@@ -6,10 +6,11 @@
 
 ## [Unreleased]
 
+## [1.4.0]
+
 ### 🔄 变更
 - 将内置 Mermaid runtime 更新到 [mermaid@11.16.1](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4011.16.1)。
 - 将最低支持的 JetBrains IDE 基线提升至 IntelliJ Platform `2023.3`。
-
 ## [1.3.0]
 
 ### 🔄 变更
