@@ -22,7 +22,9 @@ CHANGELOG_HEADINGS = {
 
 runtime_path = "src/main/resources/mermaid/mermaid.min.js"
 runtime = File.read(runtime_path)
-versions = runtime.scan(/version:"(\d+\.\d+\.\d+)"/).flatten.uniq
+# Some bundled dependencies publish 0.0.0 as placeholder metadata. It is not
+# the Mermaid release version and must not make runtime detection ambiguous.
+versions = runtime.scan(/version:"(\d+\.\d+\.\d+)"/).flatten.uniq - ["0.0.0"]
 abort("Missing Mermaid version in #{runtime_path}") if versions.empty?
 abort("Ambiguous Mermaid versions in #{runtime_path}: #{versions.join(", ")}") if versions.length != 1
 abort("Expected Mermaid #{version}, found #{versions.first} in #{runtime_path}") unless versions.first == version
