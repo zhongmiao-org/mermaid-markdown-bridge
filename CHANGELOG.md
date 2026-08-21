@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### 🔄 Changed
+- Updated the bundled Mermaid runtime to [mermaid@11.17.0](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4011.17.0).
+
 ### 📚 Documentation
 - Added a bilingual FAQ for the Mermaid preview conflict with the official Mermaid plugin bundled in JetBrains IDE 2026.2+, including an error screenshot and step-by-step plugin disable instructions.
 
