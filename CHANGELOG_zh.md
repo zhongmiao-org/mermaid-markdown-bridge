@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+## [1.5.0]
+
 ### 🔄 变更
 - 将内置 Mermaid runtime 更新到 [mermaid@11.17.0](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4011.17.0)。
 
@@ -14,7 +16,6 @@
 
 ### 🔧 CI/CD
 - 检测内置 Mermaid runtime 版本时忽略依赖中嵌入的 `0.0.0` 占位元数据，使 Mermaid 11.17.0 自动同步流程可以继续执行。
-
 ## [1.4.0]
 
 ### 🔄 变更
