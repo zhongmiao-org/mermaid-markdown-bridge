@@ -135,6 +135,15 @@ class MermaidBrowserPreviewExtensionTest {
     }
 
     @Test
+    fun `ignores dependency placeholder when detecting mermaid runtime version`() {
+        val versions = extractBundledMermaidVersions(
+            """version:"0.0.0" version:"11.17.0"""",
+        )
+
+        assertEquals(setOf("11.17.0"), versions)
+    }
+
+    @Test
     fun `does not load unknown resources`() {
         val extension = MermaidBrowserPreviewExtension("default")
 
@@ -151,14 +160,18 @@ class MermaidBrowserPreviewExtensionTest {
         val extension = MermaidBrowserPreviewExtension("default")
         val resource = extension.loadResource("mermaid.min.js") ?: error("Mermaid runtime was not loaded")
         val script = resource.content.toString(Charsets.UTF_8)
-        val versions = Regex("""version:"(\d+\.\d+\.\d+)"""")
-            .findAll(script)
-            .map { it.groupValues[1] }
-            .toSet()
+        val versions = extractBundledMermaidVersions(script)
 
         assertEquals("Expected exactly one bundled Mermaid runtime version", 1, versions.size)
         return versions.single()
     }
+
+    private fun extractBundledMermaidVersions(script: String): Set<String> =
+        Regex("""version:"(\d+\.\d+\.\d+)"""")
+            .findAll(script)
+            .map { it.groupValues[1] }
+            .filter { it != "0.0.0" }
+            .toSet()
 
     private fun assertDocumentsMermaidVersion(path: String, version: String) {
         val readme = Files.readString(Path.of(path))

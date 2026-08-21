@@ -9,6 +9,9 @@
 ### 📚 Documentation
 - Added a bilingual FAQ for the Mermaid preview conflict with the official Mermaid plugin bundled in JetBrains IDE 2026.2+, including an error screenshot and step-by-step plugin disable instructions.
 
+### 🔧 CI/CD
+- Ignored embedded `0.0.0` dependency placeholder metadata when detecting the bundled Mermaid runtime version, so the automated Mermaid 11.17.0 sync can proceed.
+
 ## [1.4.0] - 2026-08-05
 
 ### 🔄 Changed
