@@ -145,6 +145,26 @@ Mermaid 只在 JetBrains Markdown Preview 的浏览器上下文中用于渲染 M
 - 依赖内置插件：JetBrains Markdown 插件（`org.intellij.plugins.markdown`）。
 - 预览引擎：基于 JCEF 的 Markdown Preview。
 
+## 常见问题（FAQ）
+
+### 为什么 Mermaid 语法正确，在 JetBrains IDE 2026.2 或更高版本中却显示 `Syntax error in text`？
+
+JetBrains 官方 [Mermaid 插件](https://plugins.jetbrains.com/plugin/20146-mermaid) 此前已经可以从 Marketplace 单独安装。从 JetBrains IDE `2026.2`（IntelliJ Platform build `262`）开始，JetBrains [将该插件加入了 IDE 安装包](https://platform.jetbrains.com/t/mermaid-plugin-status/1484/10)。
+
+如果同时启用 JetBrains 官方 Mermaid 插件和 Mermaid Markdown Bridge，两套预览扩展可能会同时渲染同一个 Mermaid fenced code block。此时，即使 Mermaid 语法正确，也可能出现下图中的报错：
+
+![同时启用两个 Mermaid 预览渲染器导致的语法错误](./docs/images/faq-official-mermaid-conflict.png)
+
+请只保留一个 Mermaid Markdown Preview 渲染器。如果要继续使用 Mermaid Markdown Bridge，请按以下步骤操作：
+
+1. 打开 `Settings/Preferences` > `Plugins` > `Installed`。
+2. 搜索 `Mermaid`。
+3. 禁用开发者为 `JetBrains s.r.o.` 的官方 `Mermaid` 插件（`com.intellij.mermaid`）。请**不要**禁用 JetBrains `Markdown` 插件。
+4. 确认 `Mermaid Markdown Bridge` 仍处于启用状态。
+5. 应用修改，并在 IDE 提示时重启；重启后重新打开 Markdown Preview。
+
+如果更希望使用 JetBrains 官方渲染器，也可以反过来禁用 Mermaid Markdown Bridge。关键是不要同时启用这两个 Mermaid 预览渲染器。
+
 ## 已知限制
 
 - Compose Markdown Preview 可能不会加载浏览器扩展脚本。

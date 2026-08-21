@@ -156,6 +156,26 @@ Mermaid is used only inside the JetBrains Markdown Preview browser context to re
 - Required bundled plugin: JetBrains Markdown plugin (`org.intellij.plugins.markdown`).
 - Preview engine: JCEF-based Markdown Preview.
 
+## FAQ
+
+### Why does a valid Mermaid block show `Syntax error in text` in JetBrains IDE 2026.2 or later?
+
+JetBrains had already published its official [Mermaid plugin](https://plugins.jetbrains.com/plugin/20146-mermaid) as a separately installable Marketplace plugin. Starting with JetBrains IDE `2026.2` (IntelliJ Platform build `262`), JetBrains [included that plugin in IDE installers](https://platform.jetbrains.com/t/mermaid-plugin-status/1484/10).
+
+If the JetBrains Mermaid plugin and Mermaid Markdown Bridge are both enabled, both preview extensions can try to render the same fenced Mermaid block. A valid diagram may then display an error like this:
+
+![Mermaid syntax error caused by two enabled Mermaid preview renderers](./docs/images/faq-official-mermaid-conflict.png)
+
+Use only one Mermaid Markdown Preview renderer. To keep using Mermaid Markdown Bridge:
+
+1. Open `Settings/Preferences` > `Plugins` > `Installed`.
+2. Search for `Mermaid`.
+3. Disable the official `Mermaid` plugin from `JetBrains s.r.o.` (`com.intellij.mermaid`). Do **not** disable the JetBrains `Markdown` plugin.
+4. Make sure `Mermaid Markdown Bridge` remains enabled.
+5. Apply the change and restart the IDE when prompted, then reopen the Markdown preview.
+
+If you prefer the official JetBrains renderer, disable Mermaid Markdown Bridge instead. The important part is to keep only one of the two Mermaid preview renderers enabled.
+
 ## Known Limitations
 
 - Compose Markdown Preview may not load the browser extension script.

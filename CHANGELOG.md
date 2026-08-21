@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### 📚 Documentation
+- Added a bilingual FAQ for the Mermaid preview conflict with the official Mermaid plugin bundled in JetBrains IDE 2026.2+, including an error screenshot and step-by-step plugin disable instructions.
+
 ## [1.4.0] - 2026-08-05
 
 ### 🔄 Changed
