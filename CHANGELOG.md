@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-08-21
+
 ### 🔄 Changed
 - Updated the bundled Mermaid runtime to [mermaid@11.17.0](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4011.17.0).
 
@@ -14,7 +16,6 @@
 
 ### 🔧 CI/CD
 - Ignored embedded `0.0.0` dependency placeholder metadata when detecting the bundled Mermaid runtime version, so the automated Mermaid 11.17.0 sync can proceed.
-
 ## [1.4.0] - 2026-08-05
 
 ### 🔄 Changed
