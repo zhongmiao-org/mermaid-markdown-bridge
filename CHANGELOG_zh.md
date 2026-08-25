@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### 🔄 变更
+- 将内置 Mermaid runtime 更新到 [mermaid@11.17.1](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4011.17.1)。
+
 ## [1.5.0]
 
 ### 🔄 变更
