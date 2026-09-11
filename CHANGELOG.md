@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### 🔄 Changed
+- Updated the bundled Mermaid runtime to [mermaid@12.0.0](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4012.0.0).
+
 ## [1.6.0] - 2026-08-27
 
 ### 🔄 Changed
