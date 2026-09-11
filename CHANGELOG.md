@@ -6,6 +6,12 @@
 
 ## [Unreleased]
 
+### 🔄 Changed
+- Updated the bundled Mermaid runtime to [mermaid@12.0.0](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4012.0.0).
+
+### 🐛 Fixed
+- Prevented overlapping preview renders from removing diagram controls during asynchronous Mermaid layout, and kept newly added diagrams queued after rendering completes or fails.
+
 ## [1.6.0] - 2026-08-27
 
 ### 🔄 Changed

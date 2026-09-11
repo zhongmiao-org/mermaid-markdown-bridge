@@ -87,6 +87,7 @@
 
   let initialized = false;
   let scheduled = false;
+  let rendering = false;
 
   function isMermaidCodeBlock(code) {
     if (!code || !code.classList) {
@@ -403,8 +404,14 @@
     console.warn("Mermaid Markdown Bridge failed to render a diagram.", error);
   }
 
-  function renderPendingBlocks() {
+  async function renderPendingBlocks() {
     scheduled = false;
+
+    // Mermaid mutates the DOM while rendering. Do not process the same pending
+    // blocks again before it has finished replacing their SVG content.
+    if (rendering) {
+      return;
+    }
 
     if (!initializeMermaid()) {
       window.setTimeout(scheduleRender, 100);
@@ -416,17 +423,18 @@
       return;
     }
 
+    rendering = true;
     try {
-      Promise.resolve(window.mermaid.run({ nodes: blocks }))
-        .then(function () {
-          enhanceRenderedBlocks(blocks);
-          markRendered(blocks);
-        })
-        .catch(function (error) {
-          markFailed(blocks, error);
-        });
+      await window.mermaid.run({ nodes: blocks });
+      enhanceRenderedBlocks(blocks);
+      markRendered(blocks);
     } catch (error) {
       markFailed(blocks, error);
+    } finally {
+      rendering = false;
+      // Pick up code blocks added while this batch was in flight, even if its
+      // DOM mutation notification has already been handled.
+      scheduleRender();
     }
   }
 
