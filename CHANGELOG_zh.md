@@ -6,12 +6,13 @@
 
 ## [Unreleased]
 
+## [1.7.0]
+
 ### 🔄 变更
 - 将内置 Mermaid runtime 更新到 [mermaid@12.0.0](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4012.0.0)。
 
 ### 🐛 修复
 - 修复 Mermaid 异步布局期间重复渲染导致图表控制按钮丢失的问题，并确保渲染完成或失败后继续处理期间新增的图表。
-
 ## [1.6.0]
 
 ### 🔄 变更
