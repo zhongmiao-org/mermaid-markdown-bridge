@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### 🔧 CI/CD
+- 将测试运行环境固定为 Ubuntu 24.04，修复 `ubuntu-latest` 切换到 Ubuntu 26.04 后 Playwright 1.60.0 无法安装 Chromium 的问题。
+
 ## [1.9.0]
 
 ### 🔄 变更

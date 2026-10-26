@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### 🔧 CI/CD
+- Pinned the test runner to Ubuntu 24.04 so Playwright 1.60.0 can install Chromium after the `ubuntu-latest` image moved to Ubuntu 26.04.
+
 ## [1.9.0] - 2026-10-15
 
 ### 🔄 Changed
