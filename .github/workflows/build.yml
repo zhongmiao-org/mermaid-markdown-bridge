@@ -82,7 +82,8 @@ jobs:
   test:
     name: Test
     needs: [ build ]
-    runs-on: ubuntu-latest
+    # Playwright 1.60.0 cannot install Chromium on Ubuntu 26.04.
+    runs-on: ubuntu-24.04
     steps:
 
       # Free GitHub Actions Environment Disk Space
