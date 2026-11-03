@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### 🔄 Changed
+- Updated the bundled Mermaid runtime to [mermaid@12.3.0](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4012.3.0).
+
 ### 🔧 CI/CD
 - Pinned the test runner to Ubuntu 24.04 so Playwright 1.60.0 can install Chromium after the `ubuntu-latest` image moved to Ubuntu 26.04.
 
