@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### 🔄 变更
+- 将内置 Mermaid runtime 更新到 [mermaid@12.3.0](https://github.com/mermaid-js/mermaid/releases/tag/mermaid%4012.3.0)。
+
 ### 🔧 CI/CD
 - 将测试运行环境固定为 Ubuntu 24.04，修复 `ubuntu-latest` 切换到 Ubuntu 26.04 后 Playwright 1.60.0 无法安装 Chromium 的问题。
 
